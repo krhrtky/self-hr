@@ -1,5 +1,5 @@
 
-rootProject.name = "gradle-multi-project"
+rootProject.name = "self-hr"
 
 include(
     "backend",

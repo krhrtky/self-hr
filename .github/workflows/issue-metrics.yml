@@ -33,7 +33,7 @@ jobs:
         uses: github/issue-metrics@v2
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SEARCH_QUERY: repo:krhrtky/gradle-multi-project is:pr created:${{ env.last_week }} -reason:"not planned"
+          SEARCH_QUERY: repo:krhrtky/self-hr is:pr created:${{ env.last_week }} -reason:"not planned"
 
       - name: Create issue
         uses: peter-evans/create-issue-from-file@v4
