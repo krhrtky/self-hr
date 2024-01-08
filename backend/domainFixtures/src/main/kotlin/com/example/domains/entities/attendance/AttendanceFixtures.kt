@@ -22,4 +22,3 @@ fun Attendance.Companion.inject(
             attendanceDate,
             attendanceRecords,
         )
-
