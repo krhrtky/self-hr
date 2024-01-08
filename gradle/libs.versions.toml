@@ -14,6 +14,7 @@ detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 [libraries]
 spring-starter-web = { module = "org.springframework.boot:spring-boot-starter-web" }
 spring-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
+spring-starter-jdbc = { module = "org.springframework.boot:spring-boot-starter-jdbc" }
 spring-starter-jooq = { module = "org.springframework.boot:spring-boot-starter-jooq" }
 spring-autoconfigure = { module = "org.springframework.boot:spring-boot-autoconfigure", version.ref = "springBoot" }
 spring-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
