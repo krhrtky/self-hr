@@ -1,4 +1,5 @@
 import nu.studer.gradle.jooq.JooqEdition
+import org.jooq.meta.jaxb.ForcedType
 import org.jooq.meta.jaxb.Logging
 import org.jooq.meta.jaxb.Property
 
@@ -48,6 +49,15 @@ jooq {
                                 // @see https://www.jooq.org/doc/latest/manual/code-generation/codegen-ddl/
                                 key = "scripts"
                                 value = "../../docker/sqldef/volume/schema.sql"
+                            }
+                        )
+                        forcedTypes = listOf(
+                            ForcedType().apply {
+                                name
+                                userType = "java.time.OffsetDateTime"
+                                converter =
+                                    "com.example.infrastructure.jooq.converters.TimestampToOffsetDateTimeConverter"
+                                includeExpression = ".*_DATETIME"
                             }
                         )
                     }

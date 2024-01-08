@@ -10,11 +10,13 @@ dependencies {
     implementation(libs.jackson.module.kotlin)
     implementation(libs.kotlin.reflect)
     implementation(libs.kotlin.stdlib)
+    implementation("org.springframework:spring-tx:6.1.2")
     testImplementation(libs.spring.starter.test) {
         exclude("org.junit.vintage:junit-vintage-engine")
         exclude(module = "mockito-core")
     }
     testImplementation(kotlin("test"))
+    testImplementation(project(":backend:domainFixtures"))
 }
 
 tasks.bootJar {
