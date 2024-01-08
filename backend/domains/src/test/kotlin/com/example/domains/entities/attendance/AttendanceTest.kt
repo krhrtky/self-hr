@@ -68,18 +68,20 @@ class AttendanceTest {
             val (attendance, _) = checkNotNull(result)
 
             assertThat(attendance.attendanceRecords).size().isEqualTo(1)
-            assertThat(attendance.attendanceRecords).isEqualTo(
-                listOf(
-                    AttendanceEvent.TimeRecordingEvent(
-                        id = AttendanceEventID(UUID.fromString("2467240f-5d27-4e42-946e-397509a74b7a")),
-                        recordAt = registrationTime,
-                        attendanceDate = today,
-                        timestamp = OffsetDateTime
-                            .of(2023, 12, 2, 3, 4, 5, 6, ZoneOffset.ofHours(9))
-                            .toInstant().let(Timestamp::from),
+            assertThat(attendance.attendanceRecords)
+                .usingRecursiveComparison()
+                .isEqualTo(
+                    listOf(
+                        AttendanceEvent.TimeRecordingEvent(
+                            id = AttendanceEventID(UUID.fromString("2467240f-5d27-4e42-946e-397509a74b7a")),
+                            recordAt = registrationTime,
+                            attendanceDate = today,
+                            timestamp = OffsetDateTime
+                                .of(2023, 12, 2, 3, 4, 5, 6, ZoneOffset.ofHours(9))
+                                .toInstant().let(Timestamp::from),
+                        )
                     )
                 )
-            )
         }
     }
 
