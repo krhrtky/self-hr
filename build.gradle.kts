@@ -64,7 +64,7 @@ subprojects {
         testImplementation("io.kotest:kotest-assertions-core:5.7.2")
         testImplementation("io.kotest:kotest-property:5.7.2")
         testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.3")
-        testImplementation("io.mockk:mockk:1.13.7")
+        testImplementation("io.mockk:mockk:1.13.9")
     }
 
     tasks.withType<KotlinCompile> {
