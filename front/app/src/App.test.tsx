@@ -3,9 +3,9 @@ import { render, cleanup } from "@testing-library/react";
 import App from "./App";
 
 describe(App.name, () => {
-    afterEach(cleanup);
-    it("first render", async () => {
-        const { container } = render( <App/>);
-        expect(container.innerHTML).toMatchSnapshot();
-    });
+  afterEach(cleanup);
+  it("first render", async () => {
+    const { container } = render(<App />);
+    expect(container.innerHTML).toMatchSnapshot();
+  });
 });
