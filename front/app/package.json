@@ -38,6 +38,6 @@
   "packageManager": "pnpm@8.6.12",
   "engines": {
     "pnpm": ">=8.6.2",
-    "node": "20.5.1"
+    "node": "20.11.0"
   }
 }
