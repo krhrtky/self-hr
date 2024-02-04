@@ -12,7 +12,8 @@
 			"recommended": true
 		},
 		"ignore": [
-			"./src/libs/api/generated/*"
+			"./src/libs/api/generated/*",
+			"./src/routeTree.gen.ts"
 		]
 	}
 }

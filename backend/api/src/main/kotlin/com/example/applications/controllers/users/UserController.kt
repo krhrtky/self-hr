@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.ProblemDetail
 import org.springframework.http.ResponseEntity.of
@@ -93,6 +94,13 @@ class UserController(
     )
         .let(queryService::allUsers)
         .let(::ok)
+
+    @GetMapping("/detail")
+    fun detail(request: HttpServletRequest) =
+        request
+            .getAttribute("userId")
+            .toString()
+            .let(::ok)
 }
 
 data class FindUserSuccessResponse(

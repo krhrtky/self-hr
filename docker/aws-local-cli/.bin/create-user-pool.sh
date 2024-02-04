@@ -68,9 +68,7 @@ echo "$ADMIN_SET_USER_PASSWORD"
 # ユーザーリスト、および、各ユーザーステータスの確認
 # 出力結果のユーザーステータスに"CONFIRMED"があればOK
 echo execute list-users
-USER_LIST=$(aws cognito-idp list-users \
-  --user-pool-id "${USER_POOL_ID}" \
-  --endpoint-url "${ENDPOINT_URL}")
+USER_LIST=$(aws cognito-idp list-users \ --user-pool-id "${USER_POOL_ID}" \ --endpoint-url "${ENDPOINT_URL}")
 
 # 結果を出力
 echo "$USER_LIST"
