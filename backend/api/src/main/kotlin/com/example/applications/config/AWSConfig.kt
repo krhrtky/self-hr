@@ -10,5 +10,4 @@ class AWSConfig {
     @Nullable
     var overrideUrl: String? = null
     lateinit var region: String
-
 }
