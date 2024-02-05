@@ -18,12 +18,12 @@ const router = new Router({
 Amplify.configure({
   Auth: {
     Cognito: {
-      userPoolId: "ap-northeast-1_0e19bfbbe9c146b6ac9cb4224f9f4fe5",
-      userPoolClientId: "bf12u4umpyyo3ncfbmgieyqpws",
+      userPoolId: env.COGNITO_USER_POOL_ID,
+      userPoolClientId: env.COGNITO_USER_POOL_CLIENT_ID,
       loginWith: {
         email: true,
       },
-      userPoolEndpoint: "http://localhost:4000",
+      userPoolEndpoint: env.AWS_BASE_URL,
       signUpVerificationMethod: "link",
     },
   },

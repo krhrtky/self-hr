@@ -1,19 +1,20 @@
 package com.example.applications.interceptors
 
+import com.example.applications.config.AWSConfig
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
-import software.amazon.awssdk.auth.credentials.CredentialUtils
-import software.amazon.awssdk.identity.spi.AwsCredentialsIdentity
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient
 import java.net.URI
 
 @Component
-class UserInfoFilter : OncePerRequestFilter() {
+class UserInfoFilter(
+    private val awsConfig: AWSConfig,
+) : OncePerRequestFilter() {
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
@@ -25,11 +26,12 @@ class UserInfoFilter : OncePerRequestFilter() {
         }
         val authToken = request.getHeader("Authorization")
         val client = CognitoIdentityProviderClient.builder()
-            .region(Region.AP_NORTHEAST_1)
-            .credentialsProvider {
-                CredentialUtils.toCredentials(AwsCredentialsIdentity.create("", ""))
+            .region(Region.of(awsConfig.region))
+            .apply {
+                if (awsConfig.overrideUrl != null) {
+                    endpointOverride(URI(awsConfig.overrideUrl))
+                }
             }
-            .endpointOverride(URI("http://localhost:4000"))
             .build()
 
         runCatching {

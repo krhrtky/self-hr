@@ -31,8 +31,6 @@ const Tmp = () => {
     },
   });
 
-  console.log(query.data);
-
   return (
     <Suspense fallback={<div>suspended</div>}>
       <div>{JSON.stringify(query.data?.data)}</div>
