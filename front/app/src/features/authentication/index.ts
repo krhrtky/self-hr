@@ -2,7 +2,7 @@ import { email, minLength, object, Output, regex, string } from "valibot";
 import {
   fetchAuthSession,
   signIn as signInImpl,
-  signOut as singOutImpl,
+  signOut as signOutImpl,
 } from "aws-amplify/auth";
 import { useNavigate } from "@tanstack/react-router";
 import { useAuthenticator } from "@aws-amplify/ui-react";
@@ -46,7 +46,7 @@ export const useAuthentication = () => {
     await navigate({ to: redirectTo ?? "/" });
   };
 
-  const signOut = () => singOutImpl();
+  const signOut = () => signOutImpl();
 
   return {
     signIn,
