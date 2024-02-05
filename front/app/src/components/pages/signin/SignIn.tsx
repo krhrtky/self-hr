@@ -62,11 +62,11 @@ export const SignIn: FC<SignInProps> = ({ signIn }) => {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Username</FormLabel>
+                <FormLabel>Password</FormLabel>
                 <FormControl>
                   <Input type="password" placeholder="*****" {...field} />
                 </FormControl>
-                <FormDescription>input email address.</FormDescription>
+                <FormDescription>input your password.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
