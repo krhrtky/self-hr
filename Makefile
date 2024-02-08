@@ -47,7 +47,7 @@ build-backend:
 	./gradlew backend:api:bootJar
 
 install-frontend:
-	pnpm recursive install
+	pnpm recursive install --no-frozen-lockfile
 
 build-frontend:
 	${FRONT_APP_COMMAND} build
