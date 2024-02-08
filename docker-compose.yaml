@@ -21,5 +21,28 @@ services:
       MYSQL_DATABASE: app
     ports:
       - '3306:3306'
+  aws-local-cli:
+    image: public.ecr.aws/aws-cli/aws-cli:2.15.8
+    environment:
+      ENDPOINT_URL: http://moto-aws-local:4000
+      COGNITO_USER_EMAIL: sample@example.com
+      COGNITO_USER_PASSWORD: password
+    entrypoint: []
+    depends_on:
+      - moto-aws-local
+    volumes:
+      - './docker/aws-local-cli/.bin:/aws-local-cli/.bin'
+      - './docker/aws-local-cli/.aws:/root/.aws'
+      - './docker/aws-local-cli/output:/aws-local-cli/output'
+    networks:
+      - default
+  moto-aws-local:
+    image: motoserver/moto:4.2.13
+    environment:
+      MOTO_PORT: 4000
+    ports:
+      - '4000:4000'
+    networks:
+      - default
 volumes:
   db-store:

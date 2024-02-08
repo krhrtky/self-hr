@@ -15,3 +15,7 @@ spring:
     password: ${DB_PASSWORD:password}
   jooq:
     sql-dialect: mysql
+app:
+  aws:
+    override-url: ${VITE_AWS_BASE_URL}
+    region: ${AWS_REGION:ap-northeast-1}

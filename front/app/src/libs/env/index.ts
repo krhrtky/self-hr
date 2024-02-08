@@ -1,9 +1,14 @@
 const {
-    VITE_BACKEND_BASE_URL,
-}
-= import.meta.env;
+  VITE_BACKEND_BASE_URL,
+  VITE_COGNITO_USER_POOL_ID,
+  VITE_COGNITO_USER_CLIENT_POOL_ID,
+  VITE_AWS_BASE_URL,
+} = import.meta.env;
 
-export const env =  {
-    BACKEND_BASE_URL: VITE_BACKEND_BASE_URL ?? `${document.location.origin}/api` as string,
+export const env = {
+  BACKEND_BASE_URL:
+    VITE_BACKEND_BASE_URL ?? (`${document.location.origin}/api` as string),
+  COGNITO_USER_POOL_ID: VITE_COGNITO_USER_POOL_ID,
+  COGNITO_USER_POOL_CLIENT_ID: VITE_COGNITO_USER_CLIENT_POOL_ID,
+  AWS_BASE_URL: VITE_AWS_BASE_URL,
 };
-

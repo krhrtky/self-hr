@@ -17,6 +17,9 @@ dependencies {
     implementation(project(":backend:applications"))
     implementation(project(":backend:domains"))
     implementation(project(":backend:infrastructure"))
+    implementation("software.amazon.awssdk:cognitoidentity:2.23.14")
+    implementation("software.amazon.awssdk:cognitoidentityprovider:2.23.14")
+
     testImplementation(libs.spring.starter.test) {
         exclude("org.junit.vintage:junit-vintage-engine")
         exclude(module = "mockito-core")
