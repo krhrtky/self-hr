@@ -64,10 +64,5 @@
     "typescript": "5.0.2",
     "vite": "4.5.2",
     "vitest": "0.34.6"
-  },
-  "packageManager": "pnpm@8.6.12",
-  "engines": {
-    "pnpm": ">=8.6.2",
-    "node": "20.11.0"
   }
 }
