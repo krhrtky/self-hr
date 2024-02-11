@@ -12,7 +12,7 @@ import com.example.infrastructure.db.tables.references.ATTENDANCE_RECORD_EVENT
 import org.springframework.stereotype.Repository
 import java.sql.Timestamp
 import java.time.LocalDate
-import java.time.OffsetDateTime
+import java.time.ZoneOffset
 import java.util.*
 
 @Repository
@@ -105,7 +105,7 @@ class MySQLAttendanceRepository(
                     attendanceId = attendanceRaw.id.toString(),
                     attendanceDate = attendanceRaw.attendanceDate,
                     recordDatetime = it.recordAt,
-                    eventCreatedDatetime = it.timestamp.toInstant().let(OffsetDateTime::from)
+                    eventCreatedDatetime = it.timestamp.toInstant().atOffset(ZoneOffset.of("+09:00:00"))
                 )
             }
             .let(query::upsertAttendanceRecordEvents)
@@ -120,7 +120,7 @@ class MySQLAttendanceRepository(
                     attendanceRecordEventId = it.correctAttendanceEventID.toString(),
                     attendanceDate = attendanceRaw.attendanceDate,
                     correctDatetime = it.correctDateTime,
-                    eventCreatedDatetime = it.timestamp.toInstant().let(OffsetDateTime::from)
+                    eventCreatedDatetime = it.timestamp.toInstant().atOffset(ZoneOffset.of("+09:00:00"))
                 )
             }
             .let(query::upsertAttendanceCorrectEvents)
