@@ -1,9 +1,4 @@
-import {
-  addBusinessDays,
-  differenceInBusinessDays,
-  differenceInMinutes,
-  format,
-} from "date-fns";
+import { addBusinessDays, differenceInBusinessDays } from "date-fns";
 import {
   Table,
   TableBody,
@@ -24,6 +19,12 @@ import {
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar.tsx";
 import { useState } from "react";
+import {
+  formatCalenderDate,
+  formatTime,
+  formatTimeDifferent,
+  formatyyyMMdd,
+} from "@/libs/date";
 
 interface ListProps {
   isOpenDatePicker?: boolean;
@@ -60,7 +61,7 @@ type AttendanceList =
 const createDateList = ({ from, to }: { from: Date; to: Date }) => {
   const diff = differenceInBusinessDays(to, from);
   return [...Array(diff + 2).keys()].map((i) =>
-    format(addBusinessDays(from, i), "yyyy-MM-dd"),
+    formatyyyMMdd(addBusinessDays(from, i)),
   );
 };
 
@@ -92,11 +93,11 @@ export function List({
               {range?.from ? (
                 range.to ? (
                   <>
-                    {format(range.from, "LLL dd, y")} -{" "}
-                    {format(range.to, "LLL dd, y")}
+                    {formatCalenderDate(range.from)} -{" "}
+                    {formatCalenderDate(range.to)}
                   </>
                 ) : (
-                  format(range.from, "LLL dd, y")
+                  formatCalenderDate(range.from)
                 )
               ) : (
                 <span>Pick a date</span>
@@ -153,28 +154,25 @@ export function List({
                 (item) => item.attendanceDate === date,
               );
               if (item !== undefined) {
-                const differenceMinutes = item.endAt
-                  ? differenceInMinutes(item.endAt, item.startAt)
-                  : null;
+                const dateRange = {
+                  from: new Date(item.startAt),
+                  to: item.endAt ? new Date(item.endAt) : undefined,
+                };
 
-                const hours = differenceMinutes
-                  ? Math.floor(differenceMinutes / 60)
-                  : "--";
-                const minutes = differenceMinutes
-                  ? differenceMinutes % 60
-                  : "--";
                 return (
                   <TableRow key={date}>
                     <TableCell className="font-medium text-center">
                       {item.attendanceDate}
                     </TableCell>
                     <TableCell className="text-center">
-                      {format(item.startAt, "HH:mm")}
+                      {formatTime(dateRange.from)}
                     </TableCell>
                     <TableCell className="text-center">
-                      {item.endAt ? format(item.endAt, "HH:mm") : "-"}
+                      {dateRange.to ? formatTime(dateRange.to) : "-"}
                     </TableCell>
-                    <TableCell className="text-center">{`${hours}.${minutes}`}</TableCell>
+                    <TableCell className="text-center">
+                      {formatTimeDifferent(dateRange)}
+                    </TableCell>
                   </TableRow>
                 );
               } else {
