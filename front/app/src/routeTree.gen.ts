@@ -11,8 +11,17 @@ import { Route as rootRoute } from './routes/__root'
 const SignInComponentImport = new FileRoute('/sign-in').createRoute()
 const LayoutComponentImport = new FileRoute('/_layout').createRoute()
 const LayoutIndexComponentImport = new FileRoute('/_layout/').createRoute()
+const LayoutAttendanceIndexComponentImport = new FileRoute(
+  '/_layout/attendance/',
+).createRoute()
 const LayoutAboutIndexComponentImport = new FileRoute(
   '/_layout/about/',
+).createRoute()
+const LayoutAttendanceRecordComponentImport = new FileRoute(
+  '/_layout/attendance/record',
+).createRoute()
+const LayoutAttendanceListComponentImport = new FileRoute(
+  '/_layout/attendance/list',
 ).createRoute()
 
 // Create/Update Routes
@@ -47,6 +56,17 @@ const LayoutIndexComponentRoute = LayoutIndexComponentImport.update({
   ),
 })
 
+const LayoutAttendanceIndexComponentRoute =
+  LayoutAttendanceIndexComponentImport.update({
+    path: '/attendance/',
+    getParentRoute: () => LayoutComponentRoute,
+  } as any).update({
+    component: lazyRouteComponent(
+      () => import('./routes/_layout/attendance/index.component'),
+      'component',
+    ),
+  })
+
 const LayoutAboutIndexComponentRoute = LayoutAboutIndexComponentImport.update({
   path: '/about/',
   getParentRoute: () => LayoutComponentRoute,
@@ -56,6 +76,28 @@ const LayoutAboutIndexComponentRoute = LayoutAboutIndexComponentImport.update({
     'component',
   ),
 })
+
+const LayoutAttendanceRecordComponentRoute =
+  LayoutAttendanceRecordComponentImport.update({
+    path: '/attendance/record',
+    getParentRoute: () => LayoutComponentRoute,
+  } as any).update({
+    component: lazyRouteComponent(
+      () => import('./routes/_layout/attendance/record.component'),
+      'component',
+    ),
+  })
+
+const LayoutAttendanceListComponentRoute =
+  LayoutAttendanceListComponentImport.update({
+    path: '/attendance/list',
+    getParentRoute: () => LayoutComponentRoute,
+  } as any).update({
+    component: lazyRouteComponent(
+      () => import('./routes/_layout/attendance/list.component'),
+      'component',
+    ),
+  })
 
 // Populate the FileRoutesByPath interface
 
@@ -73,8 +115,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutIndexComponentImport
       parentRoute: typeof LayoutComponentImport
     }
+    '/_layout/attendance/list': {
+      preLoaderRoute: typeof LayoutAttendanceListComponentImport
+      parentRoute: typeof LayoutComponentImport
+    }
+    '/_layout/attendance/record': {
+      preLoaderRoute: typeof LayoutAttendanceRecordComponentImport
+      parentRoute: typeof LayoutComponentImport
+    }
     '/_layout/about/': {
       preLoaderRoute: typeof LayoutAboutIndexComponentImport
+      parentRoute: typeof LayoutComponentImport
+    }
+    '/_layout/attendance/': {
+      preLoaderRoute: typeof LayoutAttendanceIndexComponentImport
       parentRoute: typeof LayoutComponentImport
     }
   }
@@ -85,7 +139,10 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren([
   LayoutComponentRoute.addChildren([
     LayoutIndexComponentRoute,
+    LayoutAttendanceListComponentRoute,
+    LayoutAttendanceRecordComponentRoute,
     LayoutAboutIndexComponentRoute,
+    LayoutAttendanceIndexComponentRoute,
   ]),
   SignInComponentRoute,
 ])

@@ -26,7 +26,7 @@ services:
     environment:
       ENDPOINT_URL: http://moto-aws-local:4000
       COGNITO_USER_EMAIL: sample@example.com
-      COGNITO_USER_PASSWORD: password
+      COGNITO_USER_PASSWORD: P@ssword00
     entrypoint: []
     depends_on:
       - moto-aws-local
@@ -46,3 +46,4 @@ services:
       - default
 volumes:
   db-store:
+  moto-aws-local:

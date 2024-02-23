@@ -19,3 +19,6 @@ app:
   aws:
     override-url: ${VITE_AWS_BASE_URL}
     region: ${AWS_REGION:ap-northeast-1}
+logging:
+  level:
+    root: debug

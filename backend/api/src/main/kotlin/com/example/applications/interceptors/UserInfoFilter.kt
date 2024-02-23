@@ -20,10 +20,6 @@ class UserInfoFilter(
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        if (request.servletPath == "/v3/api-docs") {
-            filterChain.doFilter(request, response)
-            return
-        }
         val authToken = request.getHeader("Authorization")
         val client = CognitoIdentityProviderClient.builder()
             .region(Region.of(awsConfig.region))
@@ -41,8 +37,17 @@ class UserInfoFilter(
             request.setAttribute("userId", user.username())
         }.onFailure {
             response.status = HttpStatus.NOT_FOUND.value()
-            response.writer.flush()
         }
         filterChain.doFilter(request, response)
+    }
+
+    override fun shouldNotFilter(request: HttpServletRequest): Boolean {
+        return pathsNotNeedsFilter.contains(request.servletPath)
+    }
+
+    companion object {
+        private val pathsNotNeedsFilter = listOf(
+            "/v3/api-docs",
+        )
     }
 }

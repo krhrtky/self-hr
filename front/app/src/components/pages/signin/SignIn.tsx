@@ -13,20 +13,15 @@ import { valibotResolver } from "@hookform/resolvers/valibot";
 import {
   AuthenticationProperty,
   AuthenticationSchema,
-  SignInFunction,
 } from "@/features/authentication";
 import { Button } from "@/components/ui/button.tsx";
 import { type FC } from "react";
-import { useSearch } from "@tanstack/react-router";
 
 interface SignInProps {
-  signIn: SignInFunction;
+  signIn: (authenticationProperty: AuthenticationProperty) => void;
 }
 
 export const SignIn: FC<SignInProps> = ({ signIn }) => {
-  const { path } = useSearch({
-    strict: false,
-  });
   const form = useForm<AuthenticationProperty>({
     mode: "onSubmit",
     resolver: valibotResolver(AuthenticationSchema),
@@ -36,9 +31,13 @@ export const SignIn: FC<SignInProps> = ({ signIn }) => {
     },
   });
   return (
-    <div className="min-h-5 max-w-screen-sm">
+    <div className="min-w-full">
+      <h1 className="font-bold mb-5">Sign in</h1>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit((values) => signIn(values, path))}>
+        <form
+          onSubmit={form.handleSubmit((values) => signIn(values))}
+          className="grid gap-y-3"
+        >
           <FormField
             control={form.control}
             name="email"

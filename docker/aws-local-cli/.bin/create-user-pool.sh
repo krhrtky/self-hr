@@ -50,6 +50,13 @@ ADMIN_USER=$(aws cognito-idp admin-create-user \
     Name=email,Value="${COGNITO_USER_EMAIL}" \
     Name=email_verified,Value=true)
 
+echo cofirm
+
+aws cognito-idp admin-confirm-sign-up \
+  --username "${COGNITO_USER_EMAIL}" \
+  --user-pool-id "${USER_POOL_ID}" \
+  --endpoint-url "${ENDPOINT_URL}"
+
 # 結果を出力
 echo "$ADMIN_USER"
 

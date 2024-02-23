@@ -2,29 +2,39 @@ package com.example.applications.controllers.attendance
 
 import com.example.applications.attendance.AttendanceApplicationService
 import com.example.domains.entities.attendance.AttendanceException
+import com.example.domains.entities.attendance.AttendanceQueryService
+import com.example.domains.entities.attendance.AttendanceSearchParameters
 import com.github.michaelbull.result.fold
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpStatus
 import org.springframework.http.ProblemDetail
 import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.of
 import org.springframework.http.ResponseEntity.ok
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneOffset
+import java.util.*
 
 @RestController
 @RequestMapping("/attendance")
 class AttendanceController(
     private val service: AttendanceApplicationService,
+    private val queryService: AttendanceQueryService,
 ) {
     @PostMapping("/record")
-    fun record(@RequestBody requestBody: RecordRequestBody) =
+    fun record(
+        request: HttpServletRequest,
+        @RequestBody requestBody: RecordRequestBody
+    ) =
         AttendanceApplicationService.RecordDTO(
-            requestBody.userId,
+            request.getAttribute("userId").toString(),
             requestBody.recordTime.atOffset(ZoneOffset.of("+09:00:00"))
         )
             .let {
@@ -52,10 +62,26 @@ class AttendanceController(
                         failure = ::mapToErrorResponse
                     )
             }
+
+    @GetMapping("/detail")
+    fun detail(
+        request: HttpServletRequest,
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+        from: LocalDate,
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+        to: LocalDate,
+    ) = queryService
+        .query(
+            AttendanceSearchParameters(
+                userId = request.getAttribute("userId").toString().let(UUID::fromString),
+                from = from,
+                to = to,
+            )
+        )
+        .let(::ok)
 }
 
 data class RecordRequestBody(
-    val userId: String,
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     val recordTime: LocalDateTime,
 )
