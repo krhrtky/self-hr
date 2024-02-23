@@ -22,7 +22,7 @@ services:
     ports:
       - '3306:3306'
   aws-local-cli:
-    image: public.ecr.aws/aws-cli/aws-cli:2.15.22
+    image: public.ecr.aws/aws-cli/aws-cli:2.15.23
     environment:
       ENDPOINT_URL: http://moto-aws-local:4000
       COGNITO_USER_EMAIL: sample@example.com
