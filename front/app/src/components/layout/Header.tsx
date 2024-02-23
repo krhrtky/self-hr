@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { clsx } from "clsx";
+import { Link } from "@tanstack/react-router";
 
 export function Header({ className }: { className?: string | undefined }) {
   return (
@@ -17,15 +18,17 @@ export function Header({ className }: { className?: string | undefined }) {
         className,
       )}
     >
-      <p className="flex items-center gap-2">
-        <HomeIcon />
-        <span className="text-lg font-semibold text-gray-800 dark:text-gray-200">
-          Self-HR
-        </span>
-      </p>
+      <Link to="/">
+        <p className="flex items-center gap-2">
+          <HomeIcon />
+          <span className="text-lg font-semibold text-gray-800 dark:text-gray-200">
+            Self-HR
+          </span>
+        </p>
+      </Link>
       <nav className="flex items-center gap-4">
         <p className="text-sm font-medium text-gray-800 hover:underline dark:text-gray-200">
-          Attendance
+          <Link to="/attendance/">Attendance</Link>
         </p>
         <Button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md">
           Get Started

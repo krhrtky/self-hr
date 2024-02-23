@@ -13,7 +13,7 @@ type Story = StoryObj<ComponentType>;
 
 export const Basic: Story = {
   args: {
-    signIn: async (authenticationProperty, _) =>
+    signIn: async (authenticationProperty) =>
       alert(JSON.stringify(authenticationProperty)),
   },
 };

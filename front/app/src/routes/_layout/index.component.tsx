@@ -10,6 +10,7 @@ export function component() {
       main content
       <div>
         <Link to="/about/">about</Link>
+        <Link to="/attendance/record/">record</Link>
         <Button onClick={() => signOut()}>Logout</Button>
       </div>
       <Tmp />
