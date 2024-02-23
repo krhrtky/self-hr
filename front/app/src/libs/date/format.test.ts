@@ -41,7 +41,7 @@ describe(formatTimeDifferent, () => {
     const result = formatTimeDifferent({ from, to: undefined });
     expect(result).is.eq("--");
   });
-  it("should be.", () => {
+  it("should be 0 when different minutes is less than 15.", () => {
     const from = new Date(2024, 10, 1, 11, 10);
     const to = new Date(2024, 10, 1, 11, 11);
 
