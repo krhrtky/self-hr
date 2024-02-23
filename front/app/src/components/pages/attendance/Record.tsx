@@ -12,9 +12,12 @@ import { Input } from "@/components/ui/input.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { object, Output, string } from "valibot";
 import { valibotResolver } from "@hookform/resolvers/valibot";
+import { Loader2 } from "lucide-react";
 
 type RecordProps = {
+  defaultDate?: Date;
   handleRecord: ({ date, time }: { date: string; time: string }) => void;
+  inSubmitting: boolean;
 };
 
 const Schema = object({
@@ -22,15 +25,17 @@ const Schema = object({
   time: string(),
 });
 
-export function Record({ handleRecord }: RecordProps) {
-  const date = new Date();
-
+export function Record({
+  defaultDate = new Date(),
+  handleRecord,
+  inSubmitting,
+}: RecordProps) {
   const form = useForm<Output<typeof Schema>>({
     mode: "onSubmit",
     resolver: valibotResolver(Schema),
     defaultValues: {
-      date: format(date, "yyyy-MM-dd"),
-      time: date.toLocaleTimeString([], { hour12: false }),
+      date: format(defaultDate, "yyyy-MM-dd"),
+      time: defaultDate.toLocaleTimeString([], { hour12: false }),
     },
   });
 
@@ -69,7 +74,13 @@ export function Record({ handleRecord }: RecordProps) {
             )}
           />
           <div>
-            <Button type="submit">submit</Button>
+            {inSubmitting ? (
+              <Button type="button">
+                <Loader2 className="inline-block animate-spin" />
+              </Button>
+            ) : (
+              <Button type="submit">submit</Button>
+            )}
           </div>
         </form>
       </Form>

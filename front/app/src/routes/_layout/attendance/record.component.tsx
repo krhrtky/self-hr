@@ -1,7 +1,7 @@
 import { Record } from "@/components/pages/attendance";
 import { useSession } from "@/features/authentication";
 import { useRecord } from "@/libs/api";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "@tanstack/react-router";
 
 export function component() {
@@ -14,9 +14,11 @@ export function component() {
       },
     },
   });
+  const [isLoading, setIsLoading] = useState(false);
   const handleRecord = useMemo(
     () =>
       async ({ date, time }: { date: string; time: string }) => {
+        setIsLoading(true);
         const dateTime = new Date(`${date} ${time}`);
         result.mutate(
           {
@@ -25,10 +27,15 @@ export function component() {
             },
           },
           {
-            onSuccess: () =>
+            onSuccess: () => {
               navigate({
                 to: "/attendance/",
-              }),
+              });
+            },
+            onError: (error) => {
+              setIsLoading(false);
+              alert(error.message);
+            },
           },
         );
       },
@@ -36,7 +43,7 @@ export function component() {
   );
   return (
     <div className="flex justify-center min-h-screen w-1/2">
-      <Record handleRecord={handleRecord} />
+      <Record handleRecord={handleRecord} inSubmitting={isLoading} />
     </div>
   );
 }
