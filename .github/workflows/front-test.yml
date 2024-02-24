@@ -13,7 +13,7 @@ jobs:
           fetch-depth: 0
 
       - name: check diff
-        uses: dorny/paths-filter@v2.11.1
+        uses: dorny/paths-filter@v2.12.0
         id: changes
         with:
           filters: |
