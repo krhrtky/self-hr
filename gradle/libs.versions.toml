@@ -1,8 +1,8 @@
 [versions]
-kotlin = "1.8.21"
+kotlin = "1.9.22"
 springBoot = "3.2.3"
 springDependencyManagement = "1.1.4"
-detekt = "1.23.0"
+detekt = "1.23.5"
 archUnit = "1.0.1"
 dgs = "7.6.0"
 
