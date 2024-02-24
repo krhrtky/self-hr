@@ -26,7 +26,7 @@ importers:
         specifier: ^1.0.2
         version: 1.0.2(@types/react@18.2.58)(react@18.2.0)
       '@tanstack/react-query':
-        specifier: ^4.32.6
+        specifier: ^4.36.1
         version: 4.36.1(react-dom@18.2.0)(react@18.2.0)
       '@tanstack/react-router':
         specifier: ^1.6.0
