@@ -36,7 +36,7 @@ jobs:
           SEARCH_QUERY: repo:krhrtky/self-hr is:pr created:${{ env.last_week }} -reason:"not planned"
 
       - name: Create issue
-        uses: peter-evans/create-issue-from-file@v4
+        uses: peter-evans/create-issue-from-file@v5
         with:
           title: Monthly issue metrics report
           token: ${{ secrets.GITHUB_TOKEN }}
