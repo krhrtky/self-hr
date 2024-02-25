@@ -5,6 +5,7 @@ springDependencyManagement = "1.1.4"
 detekt = "1.23.5"
 archUnit = "1.2.1"
 dgs = "7.6.0"
+kotest = "5.7.2"
 
 [plugins]
 spring-boot = { id = "org.springframework.boot", version.ref = "springBoot" }
@@ -24,3 +25,6 @@ kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.re
 arch-unit = { module = "com.tngtech.archunit:archunit", version.ref = "archUnit" }
 graphql-dgs-platform = { module = "com.netflix.graphql.dgs:graphql-dgs-platform-dependencies", version.ref = "dgs" }
 graphql-dgs-spring-boot = { module = "com.netflix.graphql.dgs:graphql-dgs-spring-boot-starter", version.ref = "dgs" }
+kotest-runner-junit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
+kotest-assertions-core = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
+kotest-property = { module = "io.kotest:kotest-property", version.ref = "kotest" }
