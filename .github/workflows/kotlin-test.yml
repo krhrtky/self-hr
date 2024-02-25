@@ -64,7 +64,7 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: test
-      - uses: github/codeql-action/upload-sarif@v2
+      - uses: github/codeql-action/upload-sarif@v3
         if: ${{ failure() && steps.lint.conclusion == 'failure' && steps.checkDetektFile.outputs.exists == 'true' }}
         with:
           sarif_file: build/reports/detekt/detekt.sarif
