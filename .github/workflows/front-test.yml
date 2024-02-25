@@ -33,7 +33,7 @@ jobs:
           java-version: 17
       - uses: pnpm/action-setup@v2
         with:
-          version: 8.6.2
+          version: 8.15.4
       - uses: actions/setup-node@v3
         with:
           node-version-file: .tool-versions
