@@ -37,7 +37,7 @@ services:
     networks:
       - default
   moto-aws-local:
-    image: motoserver/moto:4.2.14
+    image: motoserver/moto:5.0.2
     environment:
       MOTO_PORT: 4000
     ports:
