@@ -41,4 +41,4 @@ jobs:
           file: ./backend/api/Dockerfile
           push: true
           no-cache: true
-          tags: ghcr.io/${{ github.actor }}/gradle-multi-project-api:${{ inputs.tag }}
+          tags: ghcr.io/${{ github.actor }}/self-hr-api:${{ inputs.tag }}
