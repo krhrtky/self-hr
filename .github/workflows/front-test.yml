@@ -27,7 +27,7 @@ jobs:
     if: ${{ needs.check.outputs.front == 'true' }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@v4
         with:
           distribution: corretto
           java-version: 17
