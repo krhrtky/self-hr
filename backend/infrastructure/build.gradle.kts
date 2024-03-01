@@ -10,6 +10,8 @@ plugins {
     id("nu.studer.jooq") version "9.0"
 }
 
+val jooqVersion = rootProject.dependencyManagement.importedProperties["jooq.version"]
+
 dependencies {
     implementation(libs.spring.autoconfigure)
     implementation(libs.spring.starter.jooq)
@@ -26,10 +28,8 @@ dependencies {
 
     runtimeOnly("com.mysql:mysql-connector-j:8.3.0")
     jooqGenerator("com.mysql:mysql-connector-j:8.3.0")
-    jooqGenerator("org.jooq:jooq-meta-extensions")
+    jooqGenerator("org.jooq:jooq-meta-extensions:$jooqVersion")
 }
-
-val jooqVersion = rootProject.dependencyManagement.importedProperties["jooq.version"]
 
 jooq {
     version.set(jooqVersion)
