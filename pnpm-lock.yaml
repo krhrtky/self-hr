@@ -26,8 +26,8 @@ importers:
         specifier: ^1.0.2
         version: 1.0.2(@types/react@18.2.61)(react@18.2.0)
       '@tanstack/react-query':
-        specifier: ^5.24.1
-        version: 5.24.1(react@18.2.0)
+        specifier: ^5.24.6
+        version: 5.24.6(react@18.2.0)
       '@tanstack/react-router':
         specifier: ^1.18.1
         version: 1.18.1(react-dom@18.2.0)(react@18.2.0)
@@ -5868,16 +5868,16 @@ packages:
     engines: {node: '>=12'}
     dev: false
 
-  /@tanstack/query-core@5.24.1:
-    resolution: {integrity: sha512-DZ6Nx9p7BhjkG50ayJ+MKPgff+lMeol7QYXkvuU5jr2ryW/4ok5eanaS9W5eooA4xN0A/GPHdLGOZGzArgf5Cg==}
+  /@tanstack/query-core@5.24.6:
+    resolution: {integrity: sha512-xYhxiMUPh1JzamVK8VwwkBpIBXVYRyIBW9gjSN+/BB4kL1nS86gnRWeW8L+sacCj1RiyEsysJe3GSvtbIpHdWw==}
     dev: false
 
-  /@tanstack/react-query@5.24.1(react@18.2.0):
-    resolution: {integrity: sha512-4+09JEdO4d6+Gc8Y/g2M/MuxDK5IY0QV8+2wL2304wPKJgJ54cBbULd3nciJ5uvh/as8rrxx6s0mtIwpRuGd1g==}
+  /@tanstack/react-query@5.24.6(react@18.2.0):
+    resolution: {integrity: sha512-eyIWwHiO1ZirYGzqs0kfRMkf8icuXroFunjnsgntk9YgGFbGoPs3Hxy9/OushNvpnkHT9RwPZb8UfEKzMzzEaQ==}
     peerDependencies:
       react: ^18.0.0
     dependencies:
-      '@tanstack/query-core': 5.24.1
+      '@tanstack/query-core': 5.24.6
       react: 18.2.0
     dev: false
 
@@ -12441,7 +12441,7 @@ packages:
       '@webassemblyjs/wasm-parser': 1.11.6
       acorn: 8.11.3
       acorn-import-assertions: 1.9.0(acorn@8.11.3)
-      browserslist: 4.22.2
+      browserslist: 4.23.0
       chrome-trace-event: 1.0.3
       enhanced-resolve: 5.15.0
       es-module-lexer: 1.4.1
