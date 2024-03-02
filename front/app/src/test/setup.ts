@@ -1,9 +1,9 @@
 import { beforeAll, afterAll, afterEach } from "vitest";
 import { setupServer } from "msw/node";
-import { getOpenAPIDefinitionMSW } from "../libs/api/generated/openAPIDefinition.ts";
+import { getOpenAPIDefinitionMock } from "../libs/api/generated/openAPIDefinition.ts";
 import Axios from "axios";
 
-const server = setupServer(...getOpenAPIDefinitionMSW());
+const server = setupServer(...getOpenAPIDefinitionMock());
 
 Axios.defaults.baseURL = "http://localhost:5173/api";
 
