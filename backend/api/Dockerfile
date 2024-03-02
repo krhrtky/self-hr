@@ -1,4 +1,4 @@
-FROM amazoncorretto:17.0.10
+FROM amazoncorretto:21.0.2
 
 ARG DB_URL
 ARG DB_USER
@@ -12,7 +12,7 @@ WORKDIR /build
 COPY . .
 RUN ./gradlew backend:api:bootJar
 
-FROM amazoncorretto:17.0.10
+FROM amazoncorretto:21.0.2
 
 RUN yum update -y \
     && yum install -y shadow-utils \
