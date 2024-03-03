@@ -8,9 +8,6 @@ jobs:
   check:
     runs-on: ubuntu-latest
 
-    permissions:
-      packages: write
-
     outputs:
       api: ${{ steps.changes.outputs.api }}
     steps:
@@ -35,6 +32,10 @@ jobs:
               - 'backend/infrastructure/build.gradle.kts'
               - 'docker/sqldef/volume/schema.sql'
   push-api-image:
+
+    permissions:
+      packages: write
+
     needs: [check]
     if: ${{ needs.check.outputs.api == 'true' }}
     uses: ./.github/workflows/docker-image-push.yml
