@@ -1,7 +1,9 @@
 .PHONY: db-up, setup, db-migrate-local, db-migrate-remote,db-codegen, api-image, start-backend, start-frontend, build-backend, build-frontend, setup-frontend, test-frontend
 
 db-up:
-	docker compose up db -d
+	@if [ -z `docker compose ps db` ]; then
+		docker compose up db -d --wait
+	fi
 
 setup: setup-backend setup-frontend
 
