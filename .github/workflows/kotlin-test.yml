@@ -37,11 +37,6 @@ jobs:
         with:
           distribution: corretto
           java-version: 17
-      - name: docker setup
-        id: dockerSetup
-        shell: sh
-        run: |
-          docker compose up -d db --wait
       - name: prepare
         shell: sh
         run: |
