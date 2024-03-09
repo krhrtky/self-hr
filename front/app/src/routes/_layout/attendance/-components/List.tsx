@@ -1,4 +1,4 @@
-import { addBusinessDays, differenceInBusinessDays } from "date-fns";
+import { eachDayOfInterval } from "date-fns";
 import {
   Table,
   TableBody,
@@ -58,12 +58,8 @@ type AttendanceList =
       date: Array<AttendanceItem>;
     };
 
-const createDateList = ({ from, to }: { from: Date; to: Date }) => {
-  const diff = differenceInBusinessDays(to, from);
-  return [...Array(diff + 2).keys()].map((i) =>
-    formatyyyMMdd(addBusinessDays(from, i)),
-  );
-};
+const createDateList = ({ from, to }: { from: Date; to: Date }) =>
+  eachDayOfInterval({ start: from, end: to }).map(formatyyyMMdd);
 
 export function List({
   isOpenDatePicker = false,
@@ -122,75 +118,77 @@ export function List({
         </Popover>
       </div>
 
-      <Table>
-        <TableCaption>Attendance</TableCaption>
-        <TableHeader className="sticky top-0 bg-gray-100">
-          <TableRow>
-            <TableHead className="text-center">Date</TableHead>
-            <TableHead className="text-center">Start At</TableHead>
-            <TableHead className="text-center">End At</TableHead>
-            <TableHead className="text-center">Working Hours</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {attendance.isLoading ? (
+      <div className="h-4/5 relative w-full overflow-auto">
+        <Table>
+          <TableCaption>Attendance</TableCaption>
+          <TableHeader className="sticky top-0 bg-gray-100">
             <TableRow>
-              <TableCell className="font-medium">
-                <Skeleton className="h-4 min-w-full" />
-              </TableCell>
-              <TableCell>
-                <Skeleton className="h-4 min-w-full" />
-              </TableCell>
-              <TableCell>
-                <Skeleton className="h-4 min-w-full" />
-              </TableCell>
-              <TableCell>
-                <Skeleton className="h-4 min-w-full" />
-              </TableCell>
+              <TableHead className="text-center">Date</TableHead>
+              <TableHead className="text-center">Start At</TableHead>
+              <TableHead className="text-center">End At</TableHead>
+              <TableHead className="text-center">Working Hours</TableHead>
             </TableRow>
-          ) : (
-            dateList.map((date) => {
-              const item = attendance.date.find(
-                (item) => item.attendanceDate === date,
-              );
-              if (item !== undefined) {
-                const dateRange = {
-                  from: new Date(item.startAt),
-                  to: item.endAt ? new Date(item.endAt) : undefined,
-                };
+          </TableHeader>
+          <TableBody>
+            {attendance.isLoading ? (
+              <TableRow>
+                <TableCell className="font-medium">
+                  <Skeleton className="h-4 min-w-full" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="h-4 min-w-full" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="h-4 min-w-full" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="h-4 min-w-full" />
+                </TableCell>
+              </TableRow>
+            ) : (
+              dateList.map((date) => {
+                const item = attendance.date.find(
+                  (item) => item.attendanceDate === date,
+                );
+                if (item !== undefined) {
+                  const dateRange = {
+                    from: new Date(item.startAt),
+                    to: item.endAt ? new Date(item.endAt) : undefined,
+                  };
 
-                return (
-                  <TableRow key={date}>
-                    <TableCell className="font-medium text-center">
-                      {item.attendanceDate}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      {formatTime(dateRange.from)}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      {dateRange.to ? formatTime(dateRange.to) : "-"}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      {formatTimeDifferent(dateRange)}
-                    </TableCell>
-                  </TableRow>
-                );
-              } else {
-                return (
-                  <TableRow key={date}>
-                    <TableCell className="font-medium text-center">
-                      {date}
-                    </TableCell>
-                    <TableCell className="text-center">--</TableCell>
-                    <TableCell className="text-center">--</TableCell>
-                    <TableCell className="text-center">--</TableCell>
-                  </TableRow>
-                );
-              }
-            })
-          )}
-        </TableBody>
-      </Table>
+                  return (
+                    <TableRow key={date}>
+                      <TableCell className="font-medium text-center">
+                        {item.attendanceDate}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {formatTime(dateRange.from)}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {dateRange.to ? formatTime(dateRange.to) : "-"}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {formatTimeDifferent(dateRange)}
+                      </TableCell>
+                    </TableRow>
+                  );
+                } else {
+                  return (
+                    <TableRow key={date}>
+                      <TableCell className="font-medium text-center">
+                        {date}
+                      </TableCell>
+                      <TableCell className="text-center">--</TableCell>
+                      <TableCell className="text-center">--</TableCell>
+                      <TableCell className="text-center">--</TableCell>
+                    </TableRow>
+                  );
+                }
+              })
+            )}
+          </TableBody>
+        </Table>
+      </div>
     </>
   );
 }
