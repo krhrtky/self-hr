@@ -1,4 +1,4 @@
-.PHONY: db-up, setup, db-migrate-local, db-migrate-remote,db-codegen, api-image, start-backend, start-frontend, build-backend, build-frontend, setup-frontend, test-frontend
+.PHONY: db-up, setup, db-migrate-local, db-migrate-remote,db-codegen, api-image, start-backend, start-frontend, build-backend, build-frontend, setup-frontend, test-frontend, start-aws-mock
 
 db-up:
 	@if ! docker compose ps | grep -q db; then \
@@ -61,3 +61,14 @@ build-frontend:
 
 test-frontend:
 	${FRONT_APP_COMMAND} test
+
+start-aws-mock:
+	@if ! docker compose ps | grep -q moto-aws-local; then \
+		docker compose up moto-aws-local -d; \
+		echo "Waiting for moto-aws-local service to be ready..."; \
+		until curl --silent http://localhost:4000; \
+		do \
+			sleep 1; \
+		done; \
+		docker compose run aws-local-cli bash /aws-local-cli/.bin/create-user-pool.sh; \
+	fi
