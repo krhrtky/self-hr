@@ -70,7 +70,6 @@ export function List({
   const [isOpen, setIsOpen] = useState(isOpenDatePicker);
 
   const dateList = createDateList(range);
-  console.log(dateList);
 
   return (
     <>
