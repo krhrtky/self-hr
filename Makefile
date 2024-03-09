@@ -1,8 +1,13 @@
 .PHONY: db-up, setup, db-migrate-local, db-migrate-remote,db-codegen, api-image, start-backend, start-frontend, build-backend, build-frontend, setup-frontend, test-frontend
 
 db-up:
-	@if [ -z `docker compose ps db` ]; then
-		docker compose up db -d --wait
+	@if ! docker compose ps | grep -q db; then \
+		docker compose up db -d; \
+		echo "Waiting for db service to be ready..."; \
+		until docker compose exec db mysqladmin ping -h "db" --silent; \
+		do \
+			sleep 1; \
+		done; \
 	fi
 
 setup: setup-backend setup-frontend
