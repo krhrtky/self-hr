@@ -12,15 +12,18 @@ services:
     depends_on:
       - db
   db:
-    image: 'mysql:8.3.0'
-    volumes:
-      - db-store:/var/lib/mysql
-      - ./logs:/var/log/mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: app
+    image: 'postgres:16.2'
     ports:
-      - '3306:3306'
+      - "5432:5432"
+    expose:
+      - "5432"
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: app
+      TZ: UTC
+    volumes:
+      - db-store:/var/lib/postgresql/data
   aws-local-cli:
     image: public.ecr.aws/aws-cli/aws-cli:2.15.27
     environment:

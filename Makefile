@@ -4,7 +4,7 @@ db-up:
 	@if ! docker compose ps | grep -q db; then \
 		docker compose up db -d; \
 		echo "Waiting for db service to be ready..."; \
-		until docker compose exec db mysqladmin ping -h "db" --silent; \
+		until docker compose exec db pg_isready &> /dev/null; \
 		do \
 			sleep 1; \
 		done; \
@@ -16,16 +16,16 @@ setup-backend: db-up db-migrate-local db-codegen
 
 setup-frontend: install-frontend open-api-client-gen
 
-DB_MIGRATE_COMMAND = docker compose run --rm sqldef mysqldef
+DB_MIGRATE_COMMAND = docker compose run --rm sqldef psqldef
 
 dry-db-migrate-local:
-	${DB_MIGRATE_COMMAND} -h db -uroot -ppassword app --file=./volume/schema.sql --dry-run
+	${DB_MIGRATE_COMMAND} -h db -U root -W password app --file=./volume/schema.sql --dry-run
 
 dry-db-migrate-remote:
 	${DB_MIGRATE_COMMAND} -h $(DB_HOST) -u $(DB_USER) -p $(DB_PASSWORD) $(DB_NAME) --file=./volume/schema.sql --dry-run
 
 db-migrate-local:
-	${DB_MIGRATE_COMMAND} -h db -uroot -ppassword app --file=./volume/schema.sql
+	${DB_MIGRATE_COMMAND} -h db -U root -W password  app --file=./volume/schema.sql
 
 db-migrate-remote:
 	${DB_MIGRATE_COMMAND} -h $(DB_HOST) -u $(DB_USER) -p $(DB_PASSWORD) $(DB_NAME) --file=./volume/schema.sql
