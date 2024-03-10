@@ -1,22 +1,25 @@
 import { Suspense } from "react";
 import { useDetail } from "@/libs/api";
 import { Button } from "@/components/ui/button.tsx";
-import { Link } from "@tanstack/react-router";
+import {createFileRoute, Link} from "@tanstack/react-router";
 import { useAuthentication, useSession } from "@/features/authentication";
-export function component() {
-  const { signOut } = useAuthentication();
-  return (
-    <div>
-      main content
-      <div>
-        <Link to="/about/">about</Link>
-        <Link to="/attendance/record/">record</Link>
-        <Button onClick={() => signOut()}>Logout</Button>
-      </div>
-      <Tmp />
-    </div>
-  );
-}
+
+export const Route = createFileRoute("/_layout/")({
+  component: () => {
+    const { signOut } = useAuthentication();
+    return (
+        <div>
+          main content
+          <div>
+            <Link to="/about/">about</Link>
+            <Link to="/attendance/record/">record</Link>
+            <Button onClick={() => signOut()}>Logout</Button>
+          </div>
+          <Tmp />
+        </div>
+    );
+  }
+})
 
 const Tmp = () => {
   const { token } = useSession();
