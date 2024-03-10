@@ -26,8 +26,8 @@ dependencies {
     }
     testImplementation(kotlin("test"))
 
-    runtimeOnly("com.mysql:mysql-connector-j:8.3.0")
-    jooqGenerator("com.mysql:mysql-connector-j:8.3.0")
+    runtimeOnly("org.postgresql:postgresql:42.7.2")
+    jooqGenerator("org.postgresql:postgresql:42.7.2")
     jooqGenerator("org.jooq:jooq-meta-extensions:$jooqVersion")
 }
 
