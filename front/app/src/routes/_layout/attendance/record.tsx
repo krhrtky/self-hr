@@ -2,9 +2,10 @@ import { Record } from "@/components/pages/attendance";
 import { useSession } from "@/features/authentication";
 import { useRecord } from "@/libs/api";
 import { useMemo, useState } from "react";
-import { useRouter } from "@tanstack/react-router";
+import {createFileRoute, useRouter} from "@tanstack/react-router";
 
-export function component() {
+export const Route = createFileRoute("/_layout/attendance/record")({
+component: () => {
   const { token } = useSession();
   const { navigate } = useRouter();
   const result = useRecord({
@@ -46,4 +47,6 @@ export function component() {
       <Record handleRecord={handleRecord} inSubmitting={isLoading} />
     </div>
   );
+},
 }
+);
