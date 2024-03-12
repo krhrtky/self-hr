@@ -25,7 +25,7 @@ services:
     volumes:
       - db-store:/var/lib/postgresql/data
   aws-local-cli:
-    image: public.ecr.aws/aws-cli/aws-cli:2.15.27
+    image: public.ecr.aws/aws-cli/aws-cli:2.15.28
     environment:
       ENDPOINT_URL: http://moto-aws-local:4000
       COGNITO_USER_EMAIL: sample@example.com
