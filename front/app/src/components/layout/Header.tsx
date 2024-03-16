@@ -1,8 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { clsx } from "clsx";
 import { Link } from "@tanstack/react-router";
+import { useAuthentication, useSession } from "@/features/authentication";
 
 export function Header({ className }: { className?: string | undefined }) {
+  const { isSignedIn } = useSession();
+  const { signOut } = useAuthentication();
   return (
     <header
       className={clsx(
@@ -28,11 +31,23 @@ export function Header({ className }: { className?: string | undefined }) {
       </Link>
       <nav className="flex items-center gap-4">
         <p className="text-sm font-medium text-gray-800 hover:underline dark:text-gray-200">
-          <Link to="/attendance/">Attendance</Link>
+          <Link to="/attendance/" preload={false}>
+            Attendance
+          </Link>
         </p>
-        <Button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md">
-          Get Started
-        </Button>
+        {isSignedIn ? (
+            <Button
+                className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md"
+                onClick={signOut}
+                >
+                SignOut
+            </Button>
+
+        ) : (
+            <Button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md">
+                <Link to="/sign-in">SignIn</Link>
+            </Button>
+        )}
       </nav>
     </header>
   );

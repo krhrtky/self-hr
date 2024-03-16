@@ -46,7 +46,10 @@ export const useAuthentication = () => {
     await navigate({ to: redirectTo ?? "/" });
   };
 
-  const signOut = () => signOutImpl();
+  const signOut = async () => {
+    await signOutImpl();
+    await navigate({ to: "/" });
+  };
 
   return {
     signIn,
@@ -55,7 +58,7 @@ export const useAuthentication = () => {
 };
 
 export const useSession = () => {
-  const { user } = useAuthenticator();
+  const { authStatus } = useAuthenticator();
   const [token, setToken] = useState("");
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -63,9 +66,10 @@ export const useSession = () => {
     fetchAuthSession()
       .then((session) => session?.tokens?.accessToken?.toString ?? "")
       .then((tokenValue) => setToken(tokenValue));
-  }, [user?.signInDetails?.loginId]);
+  }, [authStatus]);
 
   return {
+    isSignedIn: authStatus === "authenticated",
     token,
   };
 };
