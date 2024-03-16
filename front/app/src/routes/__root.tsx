@@ -11,15 +11,21 @@ export const Route = new RootRoute({
   ),
   beforeLoad: async ({ location }) => {
     const currentPath = location.pathname;
-    if (pathsWithoutAuthentication.some((path) => path === currentPath)) {
+    console.log(currentPath)
+    if (currentPath === "/") {
       return;
     }
-    try {
-      const user = await getCurrentUser();
-      if (user.signInDetails?.loginId !== undefined) {
-        return;
+    const isSignedIn = await isSignIn();
+
+    if (isSignedIn) {
+      if (signInPathPattern.some(path => path === currentPath)) {
+        throw redirect({
+          to: "/",
+        });
       }
-    } catch (e) {}
+      return;
+    }
+
     throw redirect({
       to: "/sign-in",
       search: {
@@ -29,4 +35,13 @@ export const Route = new RootRoute({
   },
 });
 
-const pathsWithoutAuthentication = ["/", "/sign-in"];
+const isSignIn : () => Promise<boolean> = async () => {
+  try {
+    const user = await getCurrentUser();
+    return user.signInDetails?.loginId !== undefined
+  } catch (e) {
+    return false;
+  }
+}
+
+const signInPathPattern = ["/sign-in", "/sign-in/"];

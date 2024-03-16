@@ -33,10 +33,13 @@ const client = new QueryClient();
 root &&
   ReactDOM.createRoot(root).render(
     <React.StrictMode>
+      {/*<Authenticator hideSignUp={true} >*/}
+
       <Authenticator.Provider>
         <QueryClientProvider client={client}>
           <RouterProvider router={router} />
         </QueryClientProvider>
       </Authenticator.Provider>
+      {/*</Authenticator>*/}
     </React.StrictMode>,
   );

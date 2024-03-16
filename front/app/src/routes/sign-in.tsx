@@ -3,7 +3,7 @@ import {
   useAuthentication,
 } from "@/features/authentication";
 import { SignIn } from "@/components/pages/signin";
-import {createFileRoute, useSearch} from "@tanstack/react-router";
+import { createFileRoute, useSearch } from "@tanstack/react-router";
 import { useMemo } from "react";
 
 export const Route = createFileRoute("/sign-in")({
@@ -13,16 +13,16 @@ export const Route = createFileRoute("/sign-in")({
       strict: false,
     });
     const handleSignIn = useMemo(
-        () => (authenticationProperty: AuthenticationProperty) =>
-            signIn(authenticationProperty, path),
-        [signIn, path],
+      () => (authenticationProperty: AuthenticationProperty) =>
+        signIn(authenticationProperty, path),
+      [signIn, path],
     );
     return (
-        <div className="flex flex-row justify-around  min-h-screen">
-          <div className="grid content-around w-1/2">
-            <SignIn signIn={handleSignIn} />
-          </div>
+      <div className="flex flex-row justify-around  min-h-screen">
+        <div className="grid content-around w-1/2">
+          <SignIn signIn={handleSignIn} />
         </div>
+      </div>
     );
-  }
+  },
 });
