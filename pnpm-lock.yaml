@@ -135,8 +135,8 @@ importers:
         specifier: ^13.8.6
         version: 13.8.6
       msw:
-        specifier: ^2.2.7
-        version: 2.2.7(typescript@5.4.2)
+        specifier: ^2.2.13
+        version: 2.2.13(typescript@5.4.2)
       postcss:
         specifier: ^8.4.35
         version: 8.4.35
@@ -2858,8 +2858,8 @@ packages:
     engines: {node: '>=18'}
     dev: true
 
-  /@mswjs/interceptors@0.25.16:
-    resolution: {integrity: sha512-8QC8JyKztvoGAdPgyZy49c9vSHHAZjHagwl4RY9E8carULk8ym3iTaiawrT1YoLF/qb449h48f71XDPgkUSOUg==}
+  /@mswjs/interceptors@0.26.14:
+    resolution: {integrity: sha512-q4S8RGjOUzv3A3gCawuKkUEcNJXjdPaSqoRHFvuZPWQnc7yOw702iGBRDMJoBK+l0KSv9XN8YP5ek6duRzrpqw==}
     engines: {node: '>=18'}
     dependencies:
       '@open-draft/deferred-promise': 2.2.0
@@ -5614,12 +5614,6 @@ packages:
       undici-types: 5.26.5
     dev: true
 
-  /@types/node@20.11.0:
-    resolution: {integrity: sha512-o9bjXmDNcF7GbM4CNQpmi+TutCgap/K3w1JyKgxAjqx41zp9qlIAVFi0IhCNsJcXolEqLWhbFbEeL0PvYm4pcQ==}
-    dependencies:
-      undici-types: 5.26.5
-    dev: true
-
   /@types/node@20.11.24:
     resolution: {integrity: sha512-Kza43ewS3xoLgCEpQrsT+xRo/EJej1y0kVYGiLFE1NEODXGzTfwiC6tXTLMQskn1X4/Rjlh0MQUvx9W+L9long==}
     dependencies:
@@ -5632,7 +5626,7 @@ packages:
   /@types/npmlog@4.1.6:
     resolution: {integrity: sha512-0l3z16vnlJGl2Mi/rgJFrdwfLZ4jfNYgE6ZShEpjqhHuGTqdEzNles03NpYHwUMVYZa+Tj46UxKIEpE78lQ3DQ==}
     dependencies:
-      '@types/node': 20.11.0
+      '@types/node': 20.11.24
     dev: true
 
   /@types/parse-json@4.0.2:
@@ -8945,8 +8939,8 @@ packages:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
     dev: true
 
-  /msw@2.2.7(typescript@5.4.2):
-    resolution: {integrity: sha512-ZxJpzw2Y8QvgPsYY4D4giBOkQNrTauqr3zh2aGguW4alnf9JHryJNCui/pGlsWfhwbpz2KkndmGkl9dVFHzHZA==}
+  /msw@2.2.13(typescript@5.4.2):
+    resolution: {integrity: sha512-ljFf1xZsU0b4zv1l7xzEmC6OZA6yD06hcx0H+dc8V0VypaP3HGYJa1rMLjQbBWl32ptGhcfwcPCWDB1wjmsftw==}
     engines: {node: '>=18'}
     hasBin: true
     requiresBuild: true
@@ -8960,7 +8954,7 @@ packages:
       '@bundled-es-modules/statuses': 1.0.1
       '@inquirer/confirm': 3.0.0
       '@mswjs/cookies': 1.1.0
-      '@mswjs/interceptors': 0.25.16
+      '@mswjs/interceptors': 0.26.14
       '@open-draft/until': 2.1.0
       '@types/cookie': 0.6.0
       '@types/statuses': 2.0.4
