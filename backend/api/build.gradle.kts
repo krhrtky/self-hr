@@ -13,12 +13,12 @@ dependencies {
     implementation(libs.kotlin.stdlib)
     implementation(platform(libs.graphql.dgs.platform))
     implementation(libs.graphql.dgs.spring.boot)
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-api:2.3.0")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-api:2.4.0")
     implementation(project(":backend:applications"))
     implementation(project(":backend:domains"))
     implementation(project(":backend:infrastructure"))
-    implementation("software.amazon.awssdk:cognitoidentity:2.25.8")
-    implementation("software.amazon.awssdk:cognitoidentityprovider:2.25.8")
+    implementation("software.amazon.awssdk:cognitoidentity:2.25.11")
+    implementation("software.amazon.awssdk:cognitoidentityprovider:2.25.11")
 
     testImplementation(libs.spring.starter.test) {
         exclude("org.junit.vintage:junit-vintage-engine")

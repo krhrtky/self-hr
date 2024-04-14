@@ -26,8 +26,8 @@ dependencies {
     }
     testImplementation(kotlin("test"))
 
-    runtimeOnly("org.postgresql:postgresql:42.7.2")
-    jooqGenerator("org.postgresql:postgresql:42.7.2")
+    runtimeOnly("org.postgresql:postgresql:42.7.3")
+    jooqGenerator("org.postgresql:postgresql:42.7.3")
     jooqGenerator("org.jooq:jooq-meta-extensions:$jooqVersion")
 }
 
