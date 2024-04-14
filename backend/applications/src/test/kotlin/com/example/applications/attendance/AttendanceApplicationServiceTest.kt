@@ -135,7 +135,9 @@ class AttendanceApplicationServiceTest {
                 )
             )
 
-            every { mockedRepository.find(attendanceID) } returns attendance
+            every {
+                mockedRepository.find(AttendanceEventID(UUID.fromString("cbee3aa9-af79-4ab2-8f2c-86dee4ff190d")))
+            } returns attendance
             justRun { mockedRepository.save(any<Attendance>()) }
 
             val result = AttendanceApplicationService.CorrectDTO(
@@ -180,7 +182,9 @@ class AttendanceApplicationServiceTest {
                 )
             )
 
-            every { mockedRepository.find(attendanceID) } returns attendance
+            every {
+                mockedRepository.find(AttendanceEventID(UUID.fromString("cbee3aa9-af79-4ab2-8f2c-86dee4ff190d")))
+            } returns attendance
 
             val result = AttendanceApplicationService.CorrectDTO(
                 correctEventID = "cbee3aa9-af79-4ab2-8f2c-86dee4ff190d",
@@ -194,7 +198,9 @@ class AttendanceApplicationServiceTest {
 
         @Test
         fun correctionIsFailedWhenAttendanceDoesNotExists() {
-            every { mockedRepository.find(attendanceID) } returns null
+            every {
+                mockedRepository.find(AttendanceEventID(UUID.fromString("cbee3aa9-af79-4ab2-8f2c-86dee4ff190d")))
+            } returns null
 
             val result = AttendanceApplicationService.CorrectDTO(
                 correctEventID = "cbee3aa9-af79-4ab2-8f2c-86dee4ff190d",
