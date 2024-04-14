@@ -139,7 +139,6 @@ class AttendanceApplicationServiceTest {
             justRun { mockedRepository.save(any<Attendance>()) }
 
             val result = AttendanceApplicationService.CorrectDTO(
-                attendanceID = "e9e0f461-c812-4e49-a515-a36d2b8e669b",
                 correctEventID = "cbee3aa9-af79-4ab2-8f2c-86dee4ff190d",
                 correctDateTime = OffsetDateTime.of(2023, 12, 16, 2, 3, 4, 5, ZoneOffset.of("+09:00:00"))
             )
@@ -184,7 +183,6 @@ class AttendanceApplicationServiceTest {
             every { mockedRepository.find(attendanceID) } returns attendance
 
             val result = AttendanceApplicationService.CorrectDTO(
-                attendanceID = "e9e0f461-c812-4e49-a515-a36d2b8e669b",
                 correctEventID = "cbee3aa9-af79-4ab2-8f2c-86dee4ff190d",
                 correctDateTime = OffsetDateTime.of(2023, 12, 16, 2, 3, 4, 5, ZoneOffset.of("+09:00:00"))
             )
@@ -199,7 +197,6 @@ class AttendanceApplicationServiceTest {
             every { mockedRepository.find(attendanceID) } returns null
 
             val result = AttendanceApplicationService.CorrectDTO(
-                attendanceID = "e9e0f461-c812-4e49-a515-a36d2b8e669b",
                 correctEventID = "cbee3aa9-af79-4ab2-8f2c-86dee4ff190d",
                 correctDateTime = OffsetDateTime.of(2023, 12, 16, 2, 3, 4, 5, ZoneOffset.of("+09:00:00"))
             )
