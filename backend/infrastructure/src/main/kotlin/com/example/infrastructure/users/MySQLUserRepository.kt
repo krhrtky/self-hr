@@ -5,7 +5,7 @@ import com.example.infrastructure.db.tables.User.Companion.USER
 import com.example.infrastructure.db.tables.records.UserRecord
 import org.jooq.DSLContext
 import org.springframework.stereotype.Repository
-import java.time.LocalDateTime
+import java.time.OffsetDateTime
 
 @Repository
 class MySQLUserRepository(
@@ -40,7 +40,7 @@ class MySQLUserRepository(
                     .insertInto(USER)
                     .set(it)
                     .onDuplicateKeyUpdate()
-                    .set(USER.UPDATED_AT, LocalDateTime.now())
+                    .set(USER.UPDATED_AT, OffsetDateTime.now())
                     .execute()
             }
     }

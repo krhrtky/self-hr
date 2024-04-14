@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/form.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import { object, Output, string } from "valibot";
+import { object, type Output, string } from "valibot";
 import { valibotResolver } from "@hookform/resolvers/valibot";
 import { Loader2 } from "lucide-react";
 

@@ -36,17 +36,16 @@ export function Header({ className }: { className?: string | undefined }) {
           </Link>
         </p>
         {isSignedIn ? (
-            <Button
-                className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md"
-                onClick={signOut}
-                >
-                SignOut
-            </Button>
-
+          <Button
+            className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md"
+            onClick={signOut}
+          >
+            SignOut
+          </Button>
         ) : (
-            <Button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md">
-                <Link to="/sign-in">SignIn</Link>
-            </Button>
+          <Button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md">
+            <Link to="/sign-in">SignIn</Link>
+          </Button>
         )}
       </nav>
     </header>

@@ -14,12 +14,17 @@ data class AttendanceSearchParameters(
     val to: LocalDate,
 )
 
+data class AttendanceEventDTO(
+    val id: String,
+    val time: OffsetDateTime,
+)
+
 data class AttendanceQueryResult(
     val data: List<AttendanceQueryResultItem>
 )
 
 data class AttendanceQueryResultItem(
     val attendanceDate: LocalDate,
-    val startAt: OffsetDateTime,
-    val endAt: OffsetDateTime?,
+    val startAt: AttendanceEventDTO,
+    val endAt: AttendanceEventDTO?,
 )

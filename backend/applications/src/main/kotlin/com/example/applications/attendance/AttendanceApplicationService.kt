@@ -3,7 +3,6 @@ package com.example.applications.attendance
 import com.example.domains.entities.attendance.Attendance
 import com.example.domains.entities.attendance.AttendanceException
 import com.example.domains.entities.attendance.AttendanceException.AttendanceNotExistsException
-import com.example.domains.entities.attendance.AttendanceID
 import com.example.domains.entities.attendance.AttendanceRepository
 import com.example.domains.entities.attendance.events.AttendanceEvent
 import com.example.domains.entities.attendance.events.AttendanceEventID
@@ -29,32 +28,32 @@ class AttendanceApplicationService(
 
         return attendance
             .record(recordDTO.recordTime)
-            .onSuccess { (attendance, _) ->
-                repository.save(attendance)
-            }
+            .onSuccess(::saveAttendance)
             .map { it.second }
             .let(mapper)
     }
 
     @Transactional
     fun correct(correctDTO: CorrectDTO): Result<AttendanceEvent, AttendanceException> {
-        val attendance = correctDTO.attendanceID
+        val correctTargetEventID = correctDTO.correctEventID
             .let(UUID::fromString)
-            .let(::AttendanceID)
-            .let(repository::find)
-            ?: return AttendanceNotExistsException("AttendanceID(${correctDTO.attendanceID}) does not exists.")
+            .let(::AttendanceEventID)
+
+        val attendance = repository.find(correctTargetEventID)
+            ?: return AttendanceNotExistsException("AttendanceEventID(${correctDTO.correctEventID}) does not exists.")
                 .let(::Err)
 
         return attendance
             .correct(
-                correctTarget = correctDTO.correctEventID.let(UUID::fromString).let(::AttendanceEventID),
+                correctTarget = correctTargetEventID,
                 correctDateTime = correctDTO.correctDateTime,
             )
-            .onSuccess { (attendance, _) ->
-                repository.save(attendance)
-            }
+            .onSuccess(::saveAttendance)
             .map { it.second }
     }
+
+    private fun saveAttendance(result: Pair<Attendance, AttendanceEvent>) =
+        repository.save(result.first)
 
     data class RecordDTO(
         val userId: String,
@@ -62,7 +61,6 @@ class AttendanceApplicationService(
     )
 
     data class CorrectDTO(
-        val attendanceID: String,
         val correctEventID: String,
         val correctDateTime: OffsetDateTime,
     )

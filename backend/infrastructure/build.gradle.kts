@@ -51,15 +51,15 @@ jooq {
                                 value = "../../docker/sqldef/volume/schema.sql"
                             }
                         )
-                        forcedTypes = listOf(
-                            ForcedType().apply {
-                                name
-                                userType = "java.time.OffsetDateTime"
-                                converter =
-                                    "com.example.infrastructure.jooq.converters.TimestampToOffsetDateTimeConverter"
-                                includeExpression = ".*_DATETIME"
-                            }
-                        )
+//                        forcedTypes = listOf(
+//                            ForcedType().apply {
+//                                name
+//                                userType = "java.time.OffsetDateTime"
+//                                converter =
+//                                    "com.eMySQLUserRepositoryxample.infrastructure.jooq.converters.TimestampToOffsetDateTimeConverter"
+//                                includeExpression = ".*_DATETIME"
+//                            }
+//                        )
                     }
                     generate.apply {
                         isRecords = true

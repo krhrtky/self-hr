@@ -15,7 +15,7 @@ import {
   AuthenticationSchema,
 } from "@/features/authentication";
 import { Button } from "@/components/ui/button.tsx";
-import { type FC } from "react";
+import type { FC } from "react";
 
 interface SignInProps {
   signIn: (authenticationProperty: AuthenticationProperty) => void;

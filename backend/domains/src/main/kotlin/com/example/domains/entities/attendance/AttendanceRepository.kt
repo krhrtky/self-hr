@@ -11,14 +11,14 @@ import java.util.UUID
 abstract class AttendanceRepository {
     fun find(id: AttendanceID): Attendance? =
         findImpl(id) ?.toEntity()
+    fun find(id: AttendanceEventID): Attendance? =
+        findImpl(id) ?.toEntity()
     fun find(userID: UserID, attendanceDate: LocalDate): Attendance? =
         findImpl(userID, attendanceDate)?.toEntity()
-    fun find(userID: UserID): List<Attendance> =
-        findImpl(userID).map { it.toEntity() }
 
     protected abstract fun findImpl(id: AttendanceID): AttendanceRaw?
+    protected abstract fun findImpl(id: AttendanceEventID): AttendanceRaw?
     protected abstract fun findImpl(userID: UserID, attendanceDate: LocalDate): AttendanceRaw?
-    protected abstract fun findImpl(userID: UserID): List<AttendanceRaw>
 
     fun save(attendance: Attendance) {
         AttendanceRaw(

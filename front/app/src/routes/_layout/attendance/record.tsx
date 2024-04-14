@@ -40,7 +40,7 @@ export const Route = createFileRoute("/_layout/attendance/record")({
             },
           );
         },
-      [result],
+      [result, navigate],
     );
     return (
       <div className="flex justify-center min-h-screen w-1/2">

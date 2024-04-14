@@ -1,4 +1,4 @@
-import { eachDayOfInterval } from "date-fns";
+import {eachDayOfInterval, format} from "date-fns";
 import {
   Table,
   TableBody,
@@ -25,6 +25,7 @@ import {
   formatTimeDifferent,
   formatyyyMMdd,
 } from "@/libs/date";
+import {Edit} from "@/routes/_layout/attendance/-components/Edit.tsx";
 
 interface ListProps {
   isOpenDatePicker?: boolean;
@@ -34,6 +35,7 @@ interface ListProps {
     to: Date;
   };
   attendance: AttendanceList;
+  edit: ({ id, time } : { id: string, date: string, time: string}) => Promise<void>;
 }
 
 type DateRange =
@@ -45,8 +47,14 @@ type DateRange =
 
 interface AttendanceItem {
   attendanceDate: string;
-  startAt: string;
-  endAt?: string;
+  startAt: {
+    id: string;
+    time: string;
+  };
+  endAt?: {
+    id: string;
+    time: string;
+  };
 }
 
 type AttendanceList =
@@ -66,6 +74,7 @@ export function List({
   onSelectDatePicker = (_dateRange) => {},
   range,
   attendance,
+  edit,
 }: ListProps) {
   const [isOpen, setIsOpen] = useState(isOpenDatePicker);
 
@@ -152,8 +161,14 @@ export function List({
                 );
                 if (item !== undefined) {
                   const dateRange = {
-                    from: new Date(item.startAt),
-                    to: item.endAt ? new Date(item.endAt) : undefined,
+                    from: {
+                      id: item.startAt.id,
+                      time: new Date(item.startAt.time),
+                    },
+                    to: item.endAt ? {
+                          id: item.endAt.id,
+                          time: new Date(item.endAt.time)
+                        } : undefined,
                   };
 
                   return (
@@ -162,28 +177,51 @@ export function List({
                         {item.attendanceDate}
                       </TableCell>
                       <TableCell className="text-center">
-                        {formatTime(dateRange.from)}
+                        <span>
+                        {formatTime(dateRange.from.time)}
+                        </span>
+                        <span>
+                          {dateRange.to ? (
+                              <Edit
+                                  time={formatTime(dateRange.from.time)}
+                                  id={dateRange.from.id}
+                                  handleEdit={( { time } ) => edit({ id: dateRange?.from?.id ?? "", date: format(dateRange?.from?.time ?? "", "yyyy-MM-dd"), time})}
+                                  inSubmitting={false}
+                              />
+                          ): null}
+                        </span>
+                      </TableCell>
+                      <TableCell className="flex items-center text-center justify-center gap-2">
+                        <span>
+                          {dateRange.to ? formatTime(dateRange.to.time) : "-"}
+                        </span>
+                        <span>
+                          {dateRange.to ? (
+                              <Edit
+                                  time={formatTime(dateRange.to.time)}
+                                  id={dateRange.to.id}
+                                  handleEdit={( { time } ) => edit({ id: dateRange?.to?.id ?? "", date: format(dateRange?.to?.time ?? "", "yyyy-MM-dd"), time})}
+                                  inSubmitting={false}
+                              />
+                          ): null}
+                        </span>
                       </TableCell>
                       <TableCell className="text-center">
-                        {dateRange.to ? formatTime(dateRange.to) : "-"}
+                        {formatTimeDifferent({ from: dateRange.from.time, to: dateRange.to?.time })}
                       </TableCell>
-                      <TableCell className="text-center">
-                        {formatTimeDifferent(dateRange)}
-                      </TableCell>
-                    </TableRow>
-                  );
-                } else {
-                  return (
-                    <TableRow key={date}>
-                      <TableCell className="font-medium text-center">
-                        {date}
-                      </TableCell>
-                      <TableCell className="text-center">--</TableCell>
-                      <TableCell className="text-center">--</TableCell>
-                      <TableCell className="text-center">--</TableCell>
                     </TableRow>
                   );
                 }
+                return (
+                  <TableRow key={date}>
+                    <TableCell className="font-medium text-center">
+                      {date}
+                    </TableCell>
+                    <TableCell className="text-center">--</TableCell>
+                    <TableCell className="text-center">--</TableCell>
+                    <TableCell className="text-center">--</TableCell>
+                  </TableRow>
+                );
               })
             )}
           </TableBody>

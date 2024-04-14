@@ -35,7 +35,10 @@ class AttendanceController(
     ) =
         AttendanceApplicationService.RecordDTO(
             request.getAttribute("userId").toString(),
-            requestBody.recordTime.atOffset(ZoneOffset.of("+09:00:00"))
+            requestBody.recordTime
+                .atOffset(ZoneOffset.UTC)
+                .atZoneSameInstant(ZoneOffset.of("+09:00:00"))
+                .toOffsetDateTime()
         )
             .let {
                 service.record(it) { result ->
@@ -50,18 +53,17 @@ class AttendanceController(
     @PostMapping("/correct")
     fun correct(@RequestBody requestBody: CorrectRequestBody) =
         AttendanceApplicationService.CorrectDTO(
-            requestBody.attendanceID,
             requestBody.correctEventID,
-            requestBody.correctDateTime.atOffset(ZoneOffset.of("+09:00:00"))
+            requestBody.correctDateTime
+                .atOffset(ZoneOffset.UTC)
+                .atZoneSameInstant(ZoneOffset.of("+09:00:00"))
+                .toOffsetDateTime()
         )
-            .let {
-                service
-                    .correct(it)
-                    .fold(
-                        success = { event -> CorrectSuccess(event.id.value.toString()).let(::ok) },
-                        failure = ::mapToErrorResponse
-                    )
-            }
+            .let(service::correct)
+            .fold(
+                success = { event -> CorrectSuccess(event.id.value.toString()).let(::ok) },
+                failure = ::mapToErrorResponse
+            )
 
     @GetMapping("/detail")
     fun detail(
@@ -91,7 +93,6 @@ data class RecordSuccess(
 )
 
 data class CorrectRequestBody(
-    val attendanceID: String,
     val correctEventID: String,
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     val correctDateTime: LocalDateTime,

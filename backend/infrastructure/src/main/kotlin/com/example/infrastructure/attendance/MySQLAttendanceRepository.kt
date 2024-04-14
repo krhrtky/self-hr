@@ -2,6 +2,7 @@ package com.example.infrastructure.attendance
 
 import com.example.domains.entities.attendance.AttendanceID
 import com.example.domains.entities.attendance.AttendanceRepository
+import com.example.domains.entities.attendance.events.AttendanceEventID
 import com.example.domains.entities.users.UserID
 import com.example.infrastructure.db.tables.records.AttendanceCorrectEventRecord
 import com.example.infrastructure.db.tables.records.AttendanceRecord
@@ -17,7 +18,8 @@ import java.util.*
 
 @Repository
 class MySQLAttendanceRepository(
-    private val query: AttendanceQuery,
+    private val query: AttendanceSelectQuery,
+    private val mutation: AttendanceMutationQuery,
 ) : AttendanceRepository() {
     override fun findImpl(id: AttendanceID): AttendanceRaw? {
         val attendanceRecord = query
@@ -25,14 +27,47 @@ class MySQLAttendanceRepository(
             .fetchOneInto(ATTENDANCE)
             ?: return null
 
-        val eventRecords = query
-            .findEventsBy(id)
+        val recordEventsRecord = attendanceRecord.attendanceId
+            .let(UUID::fromString)
+            .let(::AttendanceID)
+            .let(query::findRecordEventsBy)
+            .fetch()
+
+        val correctEventsRecord = attendanceRecord.attendanceId
+            .let(UUID::fromString)
+            .let(::AttendanceID)
+            .let(query::findCorrectEventsBy)
             .fetch()
 
         return convertToAttendanceRaw(
             attendanceRecord,
-            eventRecords.into(ATTENDANCE_RECORD_EVENT),
-            eventRecords.into(ATTENDANCE_CORRECT_EVENT),
+            recordEventsRecord.into(ATTENDANCE_RECORD_EVENT),
+            correctEventsRecord.into(ATTENDANCE_CORRECT_EVENT),
+        )
+    }
+
+    override fun findImpl(id: AttendanceEventID): AttendanceRaw? {
+        val attendanceRecord = query
+            .findAttendanceBy(id)
+            .fetchOneInto(ATTENDANCE)
+            ?: return null
+
+        val recordEventsRecord = attendanceRecord.attendanceId
+            .let(UUID::fromString)
+            .let(::AttendanceID)
+            .let(query::findRecordEventsBy)
+            .fetch()
+
+        val correctEventsRecord = attendanceRecord.attendanceId
+            .let(UUID::fromString)
+            .let(::AttendanceID)
+            .let(query::findCorrectEventsBy)
+            .fetch()
+
+        return convertToAttendanceRaw(
+            attendanceRecord,
+            recordEventsRecord.into(ATTENDANCE_RECORD_EVENT),
+            correctEventsRecord.into(ATTENDANCE_CORRECT_EVENT),
         )
     }
 
@@ -42,48 +77,23 @@ class MySQLAttendanceRepository(
             .fetchOneInto(ATTENDANCE)
             ?: return null
 
-        val eventRecords = query
-            .findEventsBy(AttendanceID(UUID.fromString(attendanceRecord.attendanceId)))
+        val recordEventsRecord = attendanceRecord.attendanceId
+            .let(UUID::fromString)
+            .let(::AttendanceID)
+            .let(query::findRecordEventsBy)
+            .fetch()
+
+        val correctEventsRecord = attendanceRecord.attendanceId
+            .let(UUID::fromString)
+            .let(::AttendanceID)
+            .let(query::findCorrectEventsBy)
             .fetch()
 
         return convertToAttendanceRaw(
             attendanceRecord,
-            eventRecords.into(ATTENDANCE_RECORD_EVENT),
-            eventRecords.into(ATTENDANCE_CORRECT_EVENT),
+            recordEventsRecord.into(ATTENDANCE_RECORD_EVENT),
+            correctEventsRecord.into(ATTENDANCE_CORRECT_EVENT),
         )
-    }
-
-    override fun findImpl(userID: UserID): List<AttendanceRaw> {
-        val attendanceRecords = query
-            .findAttendancesBy(userID)
-            .fetchInto(ATTENDANCE)
-
-        if (attendanceRecords.isEmpty()) {
-            return emptyList()
-        }
-
-        val attendanceIDs = attendanceRecords
-            .map { it.attendanceId }
-            .map(UUID::fromString)
-            .map(::AttendanceID)
-
-        val eventRecords = query
-            .findEventsBy(attendanceIDs)
-            .fetch()
-
-        val attendanceRecordEventRecords = eventRecords.into(ATTENDANCE_RECORD_EVENT)
-        val attendanceCorrectEventRecords = eventRecords.into(ATTENDANCE_CORRECT_EVENT)
-
-        return attendanceRecords
-            .map { attendanceRecord ->
-                convertToAttendanceRaw(
-                    attendanceRecord,
-                    attendanceRecordEventRecords
-                        .filter { it.attendanceId == attendanceRecord.attendanceId },
-                    attendanceCorrectEventRecords
-                        .filter { it.attendanceId == attendanceRecord.attendanceId },
-                )
-            }
     }
 
     override fun save(attendanceRaw: AttendanceRaw) {
@@ -93,9 +103,9 @@ class MySQLAttendanceRepository(
                 userId = it.userId.toString(),
                 attendanceDate = it.attendanceDate,
             )
-                .let(query::upsertAttendance)
-                .execute()
         }
+            .let(mutation::upsertAttendance)
+            .execute()
 
         attendanceRaw.events
             .filterIsInstance<EventRaw.TimeRecordingEventRaw>()
@@ -108,7 +118,7 @@ class MySQLAttendanceRepository(
                     eventCreatedDatetime = it.timestamp.toInstant().atOffset(ZoneOffset.of("+09:00:00"))
                 )
             }
-            .let(query::upsertAttendanceRecordEvents)
+            .let(mutation::upsertAttendanceRecordEvents)
             .execute()
 
         attendanceRaw.events
@@ -123,7 +133,7 @@ class MySQLAttendanceRepository(
                     eventCreatedDatetime = it.timestamp.toInstant().atOffset(ZoneOffset.of("+09:00:00"))
                 )
             }
-            .let(query::upsertAttendanceCorrectEvents)
+            .let(mutation::upsertAttendanceCorrectEvents)
             .execute()
     }
 
