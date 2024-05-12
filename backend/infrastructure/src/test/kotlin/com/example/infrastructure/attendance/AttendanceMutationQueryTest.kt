@@ -1,37 +1,25 @@
 package com.example.infrastructure.attendance
 
+import com.example.configurations.ClockTestConfig
+import com.example.core.ApplicationTime
 import com.example.infrastructure.db.tables.records.AttendanceCorrectEventRecord
 import com.example.infrastructure.db.tables.records.AttendanceRecord
 import com.example.infrastructure.db.tables.records.AttendanceRecordEventRecord
-import io.mockk.clearAllMocks
-import io.mockk.every
-import io.mockk.mockkStatic
 import org.assertj.core.api.AssertionsForClassTypes.assertThat
 import org.jooq.SQLDialect
 import org.jooq.impl.DSL
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.TestInstance
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import kotlin.test.Test
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class AttendanceMutationQueryTest {
-    private val mutation: AttendanceMutationQuery = AttendanceMutationQuery(DSL.using(SQLDialect.POSTGRES))
-
-    @BeforeAll
-    fun beforeAll() {
-        mockkStatic(LocalDateTime::class)
-        every { LocalDateTime.now() } returns LocalDateTime.of(2024, 1, 7, 18, 49, 51, 803045)
-    }
-
-    @AfterAll
-    fun afterAll() {
-        clearAllMocks()
-    }
+    private val mutation: AttendanceMutationQuery = AttendanceMutationQuery(
+        DSL.using(SQLDialect.POSTGRES),
+        ApplicationTime(ClockTestConfig().clock())
+    )
 
     @Test
     fun upsertAttendance() {
@@ -51,7 +39,7 @@ class AttendanceMutationQueryTest {
               on conflict ("ATTENDANCE_ID")
               do update
               set
-                "UPDATED_AT" = timestamp '2024-01-07 18:49:51.000803045'
+                "UPDATED_AT" = timestamp with time zone '2024-05-12 12:34:56+09:00'
         """.trimIndent()
 
         assertThat(queryString.toString()).isEqualTo(expected)
@@ -81,13 +69,13 @@ class AttendanceMutationQueryTest {
                 '8e53511f-d539-4ccb-a66d-11d816c44ec0', 
                 'aff71e0c-9c33-47fb-ad97-77dcc81a1bdf', 
                 date '2024-01-06', 
-                timestamp '2023-12-15 01:02:03.000000004', 
-                timestamp '2023-12-16 02:03:04.000000005'
+                timestamp with time zone '2023-12-15 01:02:03.000000004+09:00', 
+                timestamp with time zone '2023-12-16 02:03:04.000000005+09:00'
               )
               on conflict ("ATTENDANCE_RECORD_EVENT_ID")
               do update
               set
-                "UPDATED_AT" = timestamp '2024-01-07 18:49:51.000803045'
+                "UPDATED_AT" = timestamp with time zone '2024-05-12 12:34:56+09:00'
         """.trimIndent()
         assertThat(queryString.toString()).isEqualTo(expected)
     }
@@ -119,13 +107,13 @@ class AttendanceMutationQueryTest {
                 'aff71e0c-9c33-47fb-ad97-77dcc81a1bdf', 
                 '19be96b3-9405-43d0-8e3b-a70b3ecbdb14', 
                 date '2024-01-06', 
-                timestamp '2023-12-15 01:02:03.000000004', 
-                timestamp '2023-12-16 02:03:04.000000005'
+                timestamp with time zone '2023-12-15 01:02:03.000000004+09:00', 
+                timestamp with time zone '2023-12-16 02:03:04.000000005+09:00'
               )
               on conflict ("ATTENDANCE_CORRECT_EVENT_ID")
               do update
               set
-                "UPDATED_AT" = timestamp '2024-01-07 18:49:51.000803045'
+                "UPDATED_AT" = timestamp with time zone '2024-05-12 12:34:56+09:00'
         """.trimIndent()
         assertThat(queryString.toString()).isEqualTo(expected)
     }

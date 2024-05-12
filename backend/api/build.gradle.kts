@@ -15,6 +15,7 @@ dependencies {
     implementation(libs.graphql.dgs.spring.boot)
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-api:2.4.0")
     implementation(project(":backend:applications"))
+    implementation(project(":backend:core"))
     implementation(project(":backend:domains"))
     implementation(project(":backend:infrastructure"))
     implementation("software.amazon.awssdk:cognitoidentity:2.25.11")

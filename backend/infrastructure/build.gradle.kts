@@ -19,6 +19,8 @@ dependencies {
     implementation(libs.kotlin.reflect)
     implementation(libs.kotlin.stdlib)
     implementation(project(":backend:domains"))
+    implementation(project(":backend:core"))
+    testImplementation(project(":backend:testCore"))
 
     testImplementation(libs.spring.starter.test) {
         exclude("org.junit.vintage:junit-vintage-engine")
