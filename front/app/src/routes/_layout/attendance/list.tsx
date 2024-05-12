@@ -1,8 +1,8 @@
-import { useDetail1 } from "@/libs/api";
+import {useCorrect, useDetail1} from "@/libs/api";
 import { useSession } from "@/features/authentication";
 import { format, lastDayOfMonth, startOfMonth } from "date-fns";
-import { useState } from "react";
-import { DateRange } from "react-day-picker";
+import {useMemo, useState} from "react";
+import type { DateRange } from "react-day-picker";
 import { List } from "@/routes/_layout/attendance/-components/List.tsx";
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -36,6 +36,37 @@ export const Route = createFileRoute("/_layout/attendance/list")({
       },
     );
 
+    const correct = useCorrect( {
+      axios: {
+        headers: {
+          Authorization: token,
+        },
+      },
+        mutation: {
+          onSuccess: data => {
+              console.log(data)
+          }
+        }
+    });
+
+      const handleCorrect = useMemo(() =>
+          async ({id, date, time}: { id: string, date: string, time: string }) => {
+              correct.mutate({
+                      data: {
+                          correctEventID: id,
+                          correctDateTime: new Date(`${date} ${time}`).toISOString(),
+                      },
+                  },
+                  {
+                      onSuccess: console.log,
+                      onError: (error) => {
+                          alert(error.message);
+                      }
+                  }
+              );
+          }, [correct]);
+
+
     return (
       <div className="min-h-screen w-3/4 flex flex-col">
         <h1 className="font-bold mb-5">Recording list</h1>
@@ -55,6 +86,7 @@ export const Route = createFileRoute("/_layout/attendance/list")({
                   date: result.data?.data?.data ?? [],
                 }
           }
+          edit={handleCorrect}
         />
       </div>
     );

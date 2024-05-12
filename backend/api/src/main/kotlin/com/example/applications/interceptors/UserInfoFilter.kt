@@ -1,43 +1,30 @@
 package com.example.applications.interceptors
 
-import com.example.applications.config.AWSConfig
+import com.example.applications.libs.Authenticator
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
-import software.amazon.awssdk.regions.Region
-import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient
-import java.net.URI
 
 @Component
 class UserInfoFilter(
-    private val awsConfig: AWSConfig,
+    private val authenticator: Authenticator,
 ) : OncePerRequestFilter() {
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        val authToken = request.getHeader("Authorization")
-        val client = CognitoIdentityProviderClient.builder()
-            .region(Region.of(awsConfig.region))
-            .apply {
-                if (awsConfig.overrideUrl != null) {
-                    endpointOverride(URI(awsConfig.overrideUrl))
-                }
+        request.getHeader("Authorization")
+            ?.let(authenticator::getUserInfoFrom)
+            ?.let {
+                request.setAttribute("userId", it.id)
             }
-            .build()
-
-        runCatching {
-            val user = client.getUser {
-                it.accessToken(authToken)
+            ?: run {
+                response.sendError(HttpStatus.UNAUTHORIZED.value())
             }
-            request.setAttribute("userId", user.username())
-        }.onFailure {
-            response.status = HttpStatus.NOT_FOUND.value()
-        }
         filterChain.doFilter(request, response)
     }
 

@@ -19,6 +19,8 @@ dependencies {
     implementation(libs.kotlin.reflect)
     implementation(libs.kotlin.stdlib)
     implementation(project(":backend:domains"))
+    implementation(project(":backend:core"))
+    testImplementation(project(":backend:testCore"))
 
     testImplementation(libs.spring.starter.test) {
         exclude("org.junit.vintage:junit-vintage-engine")
@@ -51,15 +53,15 @@ jooq {
                                 value = "../../docker/sqldef/volume/schema.sql"
                             }
                         )
-                        forcedTypes = listOf(
-                            ForcedType().apply {
-                                name
-                                userType = "java.time.OffsetDateTime"
-                                converter =
-                                    "com.example.infrastructure.jooq.converters.TimestampToOffsetDateTimeConverter"
-                                includeExpression = ".*_DATETIME"
-                            }
-                        )
+//                        forcedTypes = listOf(
+//                            ForcedType().apply {
+//                                name
+//                                userType = "java.time.OffsetDateTime"
+//                                converter =
+//                                    "com.eMySQLUserRepositoryxample.infrastructure.jooq.converters.TimestampToOffsetDateTimeConverter"
+//                                includeExpression = ".*_DATETIME"
+//                            }
+//                        )
                     }
                     generate.apply {
                         isRecords = true

@@ -45,7 +45,11 @@ open-api-client-gen: open-api-schema-gen
 FRONT_APP_COMMAND = pnpm -F "app"
 
 start-backend:
-	./gradlew backend:api:bootRun
+	./gradlew backend:api:bootRun --debug-jvm
+
+run-storybook:
+	${FRONT_APP_COMMAND} storybook
+
 
 start-frontend:
 	${FRONT_APP_COMMAND} dev

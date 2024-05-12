@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 import { List as Component } from "./List";
 
 type ComponentType = typeof Component;
@@ -20,6 +20,7 @@ export const Loading: Story = {
       from: new Date(Date.parse("2024-02-01T00:00:00+09:00")),
       to: new Date(Date.parse("2024-02-29T00:00:00+09:00")),
     },
+    edit: async (value) => console.log(value),
   },
 };
 
@@ -33,6 +34,7 @@ export const DatePickerOpen: Story = {
       from: new Date(Date.parse("2024-02-01T00:00:00+09:00")),
       to: new Date(Date.parse("2024-02-29T00:00:00+09:00")),
     },
+    edit: async (value) => console.log(value),
   },
 };
 
@@ -43,13 +45,25 @@ export const Result: Story = {
       date: [
         {
           attendanceDate: "2024-02-07",
-          startAt: "2024-02-07T13:35:10+09:00",
-          endAt: "2024-02-07T23:31:47+09:00",
+          startAt: {
+            id: "xxx",
+            time: "2024-02-07T13:35:10+09:00",
+          },
+          endAt: {
+            id: "xxx",
+            time: "2024-02-07T23:31:47+09:00",
+          },
         },
         {
           attendanceDate: "2024-02-19",
-          startAt: "2024-02-19T13:14:49+09:00",
-          endAt: "2024-02-19T14:52:21+09:00",
+          startAt: {
+            id: "xxx",
+            time: "2024-02-19T13:14:49+09:00",
+          },
+          endAt: {
+            id: "xxx",
+            time: "2024-02-19T14:52:21+09:00"
+          },
         },
       ],
     },
@@ -57,5 +71,6 @@ export const Result: Story = {
       from: new Date(Date.parse("2024-02-01T00:00:00+09:00")),
       to: new Date(Date.parse("2024-02-29T00:00:00+09:00")),
     },
+    edit: async (value) => console.log(value),
   },
 };
