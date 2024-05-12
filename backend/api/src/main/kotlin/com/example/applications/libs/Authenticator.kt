@@ -28,7 +28,9 @@ class Authenticator(
     private val client = CognitoIdentityProviderClient.builder()
         .region(Region.of(awsConfig.region))
         .apply {
-            awsConfig.overrideUrl
+            awsConfig
+                .overrideUrl
+                .takeIf { it.isNotBlank() }
                 ?.let(::URI)
                 ?.let(::endpointOverride)
         }
