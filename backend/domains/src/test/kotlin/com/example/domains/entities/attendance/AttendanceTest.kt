@@ -3,7 +3,6 @@ package com.example.domains.entities.attendance
 import com.example.domains.entities.attendance.events.AttendanceEvent
 import com.example.domains.entities.attendance.events.AttendanceEventID
 import com.example.domains.entities.users.UserID
-import com.github.michaelbull.result.Ok
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockkStatic
@@ -23,7 +22,6 @@ import kotlin.test.assertTrue
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class AttendanceTest {
-    private val id = AttendanceID(UUID.fromString("8fd498cb-0436-4c43-48a1-99887164778e"))
     private val userId = UserID(UUID.fromString("1b85db5f-09b0-3ae0-d948-e0a273c8d35c"))
     private val today = LocalDate.now()
 
@@ -96,13 +94,13 @@ class AttendanceTest {
         fun `Correction of registered attendance`() {
             val result = createdAttendance.record(registrationTime)
 
-            assertTrue(result is Ok, "Expected Result.Ok")
+            assertTrue(result.isOk, "Expected Result.Ok")
 
             val (attendanceWithRecord, event) = result.value
 
             val correctionResult = attendanceWithRecord.correct(event.id, registrationTime.plusHours(1))
 
-            assertTrue(correctionResult is Ok, "Expected Result.Ok")
+            assertTrue(correctionResult.isOk, "Expected Result.Ok")
 
             val (correctedAttendance, correctionEvent) = correctionResult.value
 

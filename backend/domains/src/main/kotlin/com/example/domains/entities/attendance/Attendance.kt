@@ -1,11 +1,12 @@
 package com.example.domains.entities.attendance
 
+import com.example.domains.entities.attendance.AttendanceException.AttendanceNotExistsException
 import com.example.domains.entities.attendance.events.AttendanceEvent
 import com.example.domains.entities.attendance.events.AttendanceEventID
 import com.example.domains.entities.users.UserID
-import com.github.michaelbull.result.Err
-import com.github.michaelbull.result.Ok
 import com.github.michaelbull.result.Result
+import com.github.michaelbull.result.map
+import com.github.michaelbull.result.toResultOr
 import java.sql.Timestamp
 import java.time.LocalDate
 import java.time.OffsetDateTime
@@ -29,7 +30,10 @@ class Attendance private constructor(
                 attendanceDate = attendanceDate,
                 timestamp = now.toInstant().let(Timestamp::from),
             )
-            .let {
+            .toResultOr {
+                AttendanceNotExistsException("")
+            }
+            .map {
                 Attendance(
                     id = id,
                     userId = userId,
@@ -37,7 +41,6 @@ class Attendance private constructor(
                     attendanceRecords = attendanceRecords + it
                 ) to it
             }
-            .let(::Ok)
     }
 
     fun correct(
@@ -45,9 +48,15 @@ class Attendance private constructor(
         correctDateTime: OffsetDateTime,
     ): Result<Pair<Attendance, AttendanceEvent>, AttendanceException> {
         val now = OffsetDateTime.now()
-        val event = attendanceRecords
+        return attendanceRecords
             .find { it.id == correctTarget }
-            ?.let {
+            .toResultOr {
+                AttendanceException
+                    .CorrectTargetDoesNotExistsException(
+                        "correctTarget(AttendanceEventID: ${correctTarget.value}) is not exists."
+                    )
+            }
+            .map {
                 AttendanceEvent.TimeCorrectionEvent(
                     id = AttendanceEventID(UUID.randomUUID()),
                     correctDateTime = correctDateTime,
@@ -56,22 +65,17 @@ class Attendance private constructor(
                     attendanceDate = attendanceDate,
                 )
             }
-            ?: return AttendanceException
-                .CorrectTargetDoesNotExistsException(
-                    "correctTarget(AttendanceEventID: ${correctTarget.value}) is not exists."
+            .map {
+                Pair(
+                    Attendance(
+                        id = id,
+                        userId = userId,
+                        attendanceDate = attendanceDate,
+                        attendanceRecords = attendanceRecords + it
+                    ),
+                    it,
                 )
-                .let(::Err)
-
-        return Pair(
-            Attendance(
-                id = id,
-                userId = userId,
-                attendanceDate = attendanceDate,
-                attendanceRecords = attendanceRecords + event
-            ),
-            event,
-        )
-            .let(::Ok)
+            }
     }
 
     companion object {
