@@ -1,7 +1,7 @@
 /// <reference types="vitest" />
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import { resolve } from "path";
+import { resolve } from "node:path";
 import {TanStackRouterVite} from "@tanstack/router-vite-plugin";
 import checker from "vite-plugin-checker";
 
@@ -28,7 +28,7 @@ export default defineConfig({
     hmr: true,
     proxy: {
       "/api": {
-        target: "http://localhost:8080",
+        target: "http://localhost:8000",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
       },

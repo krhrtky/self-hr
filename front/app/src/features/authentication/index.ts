@@ -1,4 +1,4 @@
-import { email, minLength, object, Output, regex, string } from "valibot";
+import { email, minLength, object, type Output, regex, string } from "valibot";
 import {
   fetchAuthSession,
   signIn as signInImpl,
@@ -70,6 +70,6 @@ export const useSession = () => {
 
   return {
     isSignedIn: authStatus === "authenticated",
-    token,
+    token: !token ? "" : `Beaere ${token}`,
   };
 };

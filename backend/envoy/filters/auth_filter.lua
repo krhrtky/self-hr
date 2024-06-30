@@ -1,0 +1,40 @@
+function envoy_on_request(request_handle)
+    --request_handle:logInfo("received request!")
+    ---- Auth headerからトークンを取得
+    --local headers = request_handle:headers()
+    --request_handle:logInfo(tostring(headers))
+    --local auth_header = headers:get("Authorization")
+    --if auth_header ~= nil then
+    --    local token = string.gsub(auth_header, "^Bearer%s+", "")
+    --    request_handle:logInfo("token value")
+    --    request_handle:logInfo(token)
+    --
+    --    local res, body = request_handle:httpCall(
+    --            "cognitoauth_cluster",
+    --            {
+    --                [":method"] = "GET",
+    --                [":path"] = "/userpoolid/.well-known/jwks.json",
+    --                [":authority"] = "cognitoauth_cluster",
+    --                ["authorization"] = "AWS4-HMAC-SHA256 Credential=mock_access_key/20220524/us-east-1/cognito-idp/aws4_request, SignedHeaders=contentlength;content-type;host;x-amz-date, Signature=asdf"
+    --            },
+    --        "",
+    --        5000,
+    --        false
+    --    )
+    --    request_handle:logInfo(tostring(body))
+    --    request_handle:logInfo(tostring(res))
+    --
+    --    if res.status == 200 then
+    --        local user_id = res
+    --        request_handle:headers():add("x-user-id", user_id)
+    --    else
+    --        request_handle:logInfo("Auth failed.")
+    --        request_handle:logInfo(tostring(res))
+    --    end
+    --else
+    --    request_handle:respond({
+    --        [":status"] = "401",
+    --    })
+    --end
+    request_handle:headers():replace("authorization", "AWS4-HMAC-SHA256 Credential=mock_access_key/20220524/us-east-1/cognito-idp/aws4_request, SignedHeaders=contentlength;content-type;host;x-amz-date, Signature=asdf")
+end

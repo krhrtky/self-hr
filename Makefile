@@ -74,5 +74,5 @@ start-aws-mock:
 		do \
 			sleep 1; \
 		done; \
-		docker compose run aws-local-cli bash /aws-local-cli/.bin/create-user-pool.sh; \
+		docker compose run --rm aws-local-cli bash /aws-local-cli/.bin/create-user-pool.sh; \
 	fi
