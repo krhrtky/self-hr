@@ -17,7 +17,7 @@ dependencies {
         exclude(module = "mockito-core")
     }
     testImplementation(kotlin("test"))
-    testImplementation(project(":backend:domainFixtures"))
+    testImplementation(testFixtures(project(":backend:domains")))
 }
 
 tasks.bootJar {
