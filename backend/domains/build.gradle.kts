@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.spring.boot)
     alias(libs.plugins.spring.dependency.management)
     id("org.jetbrains.kotlin.plugin.spring") version libs.versions.kotlin
+    `java-test-fixtures`
 }
 
 dependencies {

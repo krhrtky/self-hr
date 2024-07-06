@@ -13,7 +13,7 @@ import java.util.UUID
 
 @JvmInline
 value class AttendanceID(val value: UUID)
-class Attendance private constructor(
+class Attendance internal constructor(
     val id: AttendanceID,
     internal val userId: UserID,
     internal val attendanceDate: LocalDate,

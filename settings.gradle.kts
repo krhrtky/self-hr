@@ -8,6 +8,5 @@ include(
     "backend:core",
     "backend:testCore",
     "backend:domains",
-    "backend:domainFixtures",
     "backend:infrastructure",
 )
