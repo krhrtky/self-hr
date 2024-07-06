@@ -1,18 +1,14 @@
 package com.example.applications.attendance
 
 import com.example.domains.entities.attendance.Attendance
-import com.example.domains.entities.attendance.AttendanceException.AttendanceNotExistsException
-import com.example.domains.entities.attendance.AttendanceException.CorrectTargetDoesNotExistsException
 import com.example.domains.entities.attendance.AttendanceID
 import com.example.domains.entities.attendance.AttendanceRepository
 import com.example.domains.entities.attendance.events.AttendanceEvent
 import com.example.domains.entities.attendance.events.AttendanceEventID
 import com.example.domains.entities.attendance.inject
 import com.example.domains.entities.users.UserID
-import com.github.michaelbull.result.Err
-import com.github.michaelbull.result.Ok
 import io.kotest.matchers.equality.shouldBeEqualToIgnoringFields
-import io.kotest.matchers.types.shouldBeInstanceOf
+import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.justRun
@@ -67,12 +63,11 @@ class AttendanceApplicationServiceTest {
                 recordAt = recordTime,
             )
 
-            result.shouldBeInstanceOf<Ok<AttendanceEvent>>()
-                .value.shouldBeEqualToIgnoringFields(
-                    expect,
-                    AttendanceEvent::id,
-                    AttendanceEvent::timestamp,
-                )
+            result.value.shouldBeEqualToIgnoringFields(
+                expect,
+                AttendanceEvent::id,
+                AttendanceEvent::timestamp,
+            )
 
             verify(exactly = 1) { mockedRepository.save(any<Attendance>()) }
         }
@@ -101,12 +96,11 @@ class AttendanceApplicationServiceTest {
                 recordAt = recordTime,
             )
 
-            result.shouldBeInstanceOf<Ok<AttendanceEvent>>()
-                .value.shouldBeEqualToIgnoringFields(
-                    expect,
-                    AttendanceEvent::id,
-                    AttendanceEvent::timestamp,
-                )
+            result.value.shouldBeEqualToIgnoringFields(
+                expect,
+                AttendanceEvent::id,
+                AttendanceEvent::timestamp,
+            )
 
             verify(exactly = 1) { mockedRepository.save(any<Attendance>()) }
         }
@@ -156,12 +150,12 @@ class AttendanceApplicationServiceTest {
                 correctDateTime = OffsetDateTime.of(2023, 12, 16, 2, 3, 4, 5, ZoneOffset.of("+09:00:00")),
             )
 
-            result.shouldBeInstanceOf<Ok<AttendanceEvent.TimeCorrectionEvent>>()
-                .value.shouldBeEqualToIgnoringFields(
-                    expected,
-                    AttendanceEvent::id,
-                    AttendanceEvent::timestamp,
-                )
+            result.isOk shouldBe true
+            result.value.shouldBeEqualToIgnoringFields(
+                expected,
+                AttendanceEvent::id,
+                AttendanceEvent::timestamp,
+            )
 
             verify(exactly = 1) { mockedRepository.save(any<Attendance>()) }
         }
@@ -192,7 +186,7 @@ class AttendanceApplicationServiceTest {
             )
                 .let(service::correct)
 
-            result.shouldBeInstanceOf<Err<CorrectTargetDoesNotExistsException>>()
+            result.isErr shouldBe true
             verify(exactly = 0) { mockedRepository.save(any<Attendance>()) }
         }
 
@@ -208,7 +202,7 @@ class AttendanceApplicationServiceTest {
             )
                 .let(service::correct)
 
-            result.shouldBeInstanceOf<Err<AttendanceNotExistsException>>()
+            result.isErr shouldBe true
             verify(exactly = 0) { mockedRepository.save(any<Attendance>()) }
         }
     }

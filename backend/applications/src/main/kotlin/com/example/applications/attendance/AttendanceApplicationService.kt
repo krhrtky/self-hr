@@ -7,10 +7,11 @@ import com.example.domains.entities.attendance.AttendanceRepository
 import com.example.domains.entities.attendance.events.AttendanceEvent
 import com.example.domains.entities.attendance.events.AttendanceEventID
 import com.example.domains.entities.users.UserID
-import com.github.michaelbull.result.Err
 import com.github.michaelbull.result.Result
+import com.github.michaelbull.result.flatMap
 import com.github.michaelbull.result.map
 import com.github.michaelbull.result.onSuccess
+import com.github.michaelbull.result.toResultOr
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.OffsetDateTime
@@ -39,15 +40,18 @@ class AttendanceApplicationService(
             .let(UUID::fromString)
             .let(::AttendanceEventID)
 
-        val attendance = repository.find(correctTargetEventID)
-            ?: return AttendanceNotExistsException("AttendanceEventID(${correctDTO.correctEventID}) does not exists.")
-                .let(::Err)
-
-        return attendance
-            .correct(
-                correctTarget = correctTargetEventID,
-                correctDateTime = correctDTO.correctDateTime,
-            )
+        return repository
+            .find(correctTargetEventID)
+            .toResultOr {
+                AttendanceNotExistsException("AttendanceEventID(${correctDTO.correctEventID}) does not exists.")
+            }
+            .flatMap {
+                it
+                    .correct(
+                        correctTarget = correctTargetEventID,
+                        correctDateTime = correctDTO.correctDateTime,
+                    )
+            }
             .onSuccess(::saveAttendance)
             .map { it.second }
     }
