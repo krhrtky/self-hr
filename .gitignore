@@ -79,3 +79,4 @@ override.tf.json
 terraform.rc
 
 node_modules
+/infrastructure/config.tfbackend
