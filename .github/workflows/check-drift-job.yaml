@@ -60,6 +60,7 @@ jobs:
         id: generate-config-file
         working-directory: "infrastructure"
         run: |
+          pwd
           `cat <<EOF > config.tfbackend
           bucket = "${TF_VAR_REMOTE_STATE_BUCKET}"
           key    = "${TF_VAR_ENV}"
