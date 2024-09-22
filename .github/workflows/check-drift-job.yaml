@@ -62,7 +62,7 @@ jobs:
         run: |
           `cat <<EOF > config.tfbackend
           bucket = "${TF_VAR_REMOTE_STATE_BUCKET}"
-          key    = "${TF_VAR_ENV}"
+          key    = "${TF_VAR_BACKEND_CONFIG_KEY}"
           region = "${TF_VAR_AWS_REGION}"
           EOF`
           CONFIG_TFBACKEND_FILE=$(pwd)/config.tfbackend
