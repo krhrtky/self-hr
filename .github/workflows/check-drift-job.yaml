@@ -69,6 +69,7 @@ jobs:
           EOF`
           CONFIG_TFBACKEND_FILE=$(pwd)/config.tfbackend
           echo "config_tfbackend_file=$CONFIG_TFBACKEND_FILE" >> "$GITHUB_OUTPUT"
+          ls
       - name: Init
         id: terraform-init
         working-directory: "infrastructure/${{ matrix.directory }}"
