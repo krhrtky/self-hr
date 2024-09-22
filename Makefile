@@ -1,4 +1,4 @@
-.PHONY: db-up, setup, db-migrate-local, db-migrate-remote,db-codegen, api-image, start-backend, start-frontend, build-backend, build-frontend, setup-frontend, test-frontend, start-aws-mock
+.PHONY: db-up, setup, db-migrate-local, db-migrate-remote,db-codegen, api-image, start-backend, start-frontend, build-backend, build-frontend, setup-frontend, test-frontend, start-aws-mock, setup-terraform
 
 db-up:
 	@if ! docker compose ps | grep -q db; then \
@@ -15,6 +15,9 @@ setup: setup-backend setup-frontend
 setup-backend: db-up db-migrate-local db-codegen
 
 setup-frontend: install-frontend open-api-client-gen
+
+setup-terraform:
+	cd infrastructure && sh ./bin/setup.sh
 
 DB_MIGRATE_COMMAND = docker compose run --rm sqldef psqldef
 
