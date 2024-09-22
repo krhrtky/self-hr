@@ -1,4 +1,4 @@
-name: check drift between terraform and
+name: check drift between terraform and actual
 
 on:
   workflow_dispatch:
