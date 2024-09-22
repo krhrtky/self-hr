@@ -38,9 +38,6 @@ jobs:
       matrix:
         directory: ${{ fromJson(needs.target-directory.outputs.target-directories) }}
     steps:
-      - name: test
-        run: |
-          echo ${{ matrix.directory }}
       - name: Checkout
         uses: actions/checkout@v4
         with:
