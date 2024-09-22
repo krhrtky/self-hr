@@ -28,7 +28,7 @@ jobs:
         id: target-directory
         working-directory: "./infrastructure"
         run: |
-          TARGET_DIRECTORY=$(find . -type f -name "main.tf" | sed -e 's/\/main.tf//g' -e 's/^/"/g' -e 's/$/"/g' | tr '\n' ',' | sed 's/^/[/;s/,$/]/')
+          TARGET_DIRECTORY=$(find . -type f -name "main.tf" | sed -e 's/\/main.tf//g' -e 's/^\.\//"/g' -e 's/$/"/g' | tr '\n' ',' | sed 's/^/[/;s/,$/]/')
           echo "value=$TARGET_DIRECTORY" >> "$GITHUB_OUTPUT"
 
   check-drift:
