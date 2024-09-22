@@ -60,11 +60,11 @@ jobs:
         id: generate-config-file
         working-directory: "infrastructure"
         run: |
-          cat <<EOF > config.tfbackend
+          `cat <<EOF > config.tfbackend
           bucket = "${TF_VAR_REMOTE_STATE_BUCKET}"
           key    = "${TF_VAR_ENV}"
           region = "${TF_VAR_AWS_REGION}"
-          EOF
+          EOF`
           CONFIG_TFBACKEND_FILE=$(pwd)/config.tfbackend
           echo "config_tfbackend_file=$CONFIG_TFBACKEND_FILE" >> "$GITHUB_OUTPUT"
       - name: Init
