@@ -1,8 +1,8 @@
 package com.example.infrastructure.users
 
 import com.example.domains.entities.users.UserRepository
-import com.example.infrastructure.db.tables.User.Companion.USER
-import com.example.infrastructure.db.tables.records.UserRecord
+import com.example.infrastructure.db.tables.records.AppUserRecord
+import com.example.infrastructure.db.tables.references.APP_USER
 import org.jooq.DSLContext
 import org.springframework.stereotype.Repository
 import java.time.OffsetDateTime
@@ -13,15 +13,16 @@ class MySQLUserRepository(
 ) : UserRepository() {
     override fun find(id: String) =
         context
-            .selectFrom(USER)
+            .selectFrom(APP_USER)
             .where(
-                USER.ID.eq(id)
+                APP_USER.ID.eq(id)
             )
-            .fetchOneInto(USER)
+            .fetchOneInto(APP_USER)
             ?.let {
                 mapToEntity(
                     id = it.id,
-                    name = it.name,
+                    firstName = it.firstName,
+                    lastName = it.lastName,
                     email = it.email,
                 )
             }
@@ -29,18 +30,19 @@ class MySQLUserRepository(
     override fun upsert(raw: UserRaw) {
         raw
             .let {
-                UserRecord(
+                AppUserRecord(
                     id = it.id,
-                    name = it.name,
+                    firstName = it.firstName,
+                    lastName = it.lastName,
                     email = it.email,
                 )
             }
             .let {
                 context
-                    .insertInto(USER)
+                    .insertInto(APP_USER)
                     .set(it)
                     .onDuplicateKeyUpdate()
-                    .set(USER.UPDATED_AT, OffsetDateTime.now())
+                    .set(APP_USER.UPDATED_AT, OffsetDateTime.now())
                     .execute()
             }
     }

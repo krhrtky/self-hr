@@ -20,7 +20,7 @@ class UserApplicationService(
     fun create(input: UserCreateInput) = {
         input
             .let {
-                User.create(input.name, input.email)
+                User.create(input.firstName, input.firstName, input.email)
             }
             .apply(repository::save).id.value
     }
@@ -30,6 +30,7 @@ class UserApplicationService(
 class UserDoesNotFindException(override val message: String?) : Exception(message)
 
 data class UserCreateInput(
-    val name: String,
+    val firstName: String,
+    val lastName: String,
     val email: String,
 )

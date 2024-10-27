@@ -2,13 +2,14 @@ package com.example.domains.entities.users
 
 class User private constructor(
     val id: UserID,
-    internal val name: String,
+    internal val firstName: String,
+    internal val lastName: String,
     internal val email: String,
     private val event: List<UserDomainEvent>,
     private var eventConsumed: Boolean = false
 ) {
-    fun changeName(newName: String) =
-        update(name = newName)
+    fun changeName(firstName: String, lastName: String) =
+        update(firstName = firstName, lastName = lastName)
     fun changeEmail(newEmail: String) =
         update(
             email = newEmail,
@@ -30,12 +31,14 @@ class User private constructor(
         }
 
     private fun update(
-        name: String? = null,
+        firstName: String? = null,
+        lastName: String? = null,
         email: String? = null,
         event: List<UserDomainEvent> = emptyList(),
     ) = User(
         id,
-        name ?: this.name,
+        firstName ?: this.firstName,
+        lastName ?: this.lastName,
         email ?: this.email,
         this.event + event,
     )
@@ -44,7 +47,8 @@ class User private constructor(
 
     companion object {
         fun create(
-            name: String,
+            firstName: String,
+            lastName: String,
             email: String,
         ) =
             UserID
@@ -52,7 +56,8 @@ class User private constructor(
                 .let {
                     User(
                         it,
-                        name,
+                        firstName,
+                        lastName,
                         email,
                         UserCreatedEvent(
                             it.value,
@@ -64,11 +69,13 @@ class User private constructor(
 
         internal fun fromRepository(
             id: String,
-            name: String,
+            firstName: String,
+            lastName: String,
             email: String,
         ) = User(
             UserID.fromRepository(id),
-            name,
+            firstName,
+            lastName,
             email,
             emptyList(),
         )

@@ -23,18 +23,20 @@ class UserTest : DescribeSpec({
 
     describe(".changeName") {
         val user = User.create(
-            name = "test user",
+            firstName = "test",
+            lastName = "user",
             email = "test.user@example.com"
         )
         it("change name property value") {
-            val changed = user.changeName("rename user")
+            val changed = user.changeName("rename", "user2")
 
             assertSoftly(changed) {
-                name shouldBe "rename user"
+                firstName shouldBe "rename"
+                lastName shouldBe "user2"
             }
         }
         it("not change email") {
-            val changed = user.changeName("rename user")
+            val changed = user.changeName("rename", "user2")
 
             assertSoftly(changed) {
                 email shouldBe "test.user@example.com"
@@ -43,7 +45,8 @@ class UserTest : DescribeSpec({
     }
     describe(".changeEmail") {
         val user = User.create(
-            name = "test user",
+            firstName = "test",
+            lastName = "user",
             email = "test.user@example.com"
         )
         it("change email property value") {
@@ -53,11 +56,12 @@ class UserTest : DescribeSpec({
                 email shouldBe "rename.user@example.com"
             }
         }
-        it("not change email") {
+        it("not change name") {
             val changed = user.changeEmail("rename.user@example.com")
 
             assertSoftly(changed) {
-                name shouldBe "test user"
+                firstName shouldBe "test"
+                lastName shouldBe "user"
             }
         }
         it("occurred event") {

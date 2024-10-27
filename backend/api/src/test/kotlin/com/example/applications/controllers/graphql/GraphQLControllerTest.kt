@@ -42,7 +42,8 @@ class GraphQLControllerTest(
                     .find("2467240f-5d27-4e42-946e-397509a74b7a")
             } returns UserDTO(
                 "2467240f-5d27-4e42-946e-397509a74b7a",
-                "test user",
+                "test",
+                "user",
                 "test.user@example.com",
             )
             val query =
@@ -50,7 +51,8 @@ class GraphQLControllerTest(
                     query {
                       fetchUser(id:"2467240f-5d27-4e42-946e-397509a74b7a") {
                         id
-                        name
+                        firstName
+                        lastName
                         email
                         __typename
                       }
@@ -65,7 +67,8 @@ class GraphQLControllerTest(
 
             assertSoftly(result) {
                 result["id"] should beEqual("2467240f-5d27-4e42-946e-397509a74b7a")
-                result["name"] should beEqual("test user")
+                result["firstName"] should beEqual("test")
+                result["lastName"] should beEqual("user")
                 result["email"] should beEqual("test.user@example.com")
                 result["__typename"] should beEqual("User")
             }
@@ -81,7 +84,8 @@ class GraphQLControllerTest(
                     query {
                       fetchUser(id:"2467240f-5d27-4e42-946e-397509a74b7a") {
                         id
-                        name
+                        firstName
+                        lastName
                         email
                         __typename
                       }

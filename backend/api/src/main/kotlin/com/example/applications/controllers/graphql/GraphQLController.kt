@@ -22,7 +22,8 @@ class GraphQLController(
             ?.let {
                 User(
                     id = it.id,
-                    name = it.name,
+                    firstName = it.firstName,
+                    lastName = it.lastName,
                     email = it.email,
                 )
             }
@@ -30,14 +31,16 @@ class GraphQLController(
     @DgsMutation
     fun createUser(@InputArgument input: CreateUserInput): User =
         UserCreateInput(
-            name = input.name,
+            firstName = input.firstName,
+            lastName = input.lastName,
             email = input.email,
         )
             .let(service::create)
             .map {
                 User(
                     id = it,
-                    name = input.name,
+                    firstName = input.firstName,
+                    lastName = input.lastName,
                     email = input.email,
                 )
             }
