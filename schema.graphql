@@ -1,11 +1,13 @@
 type User {
     id: ID!
-    name: String!
+    firstName: String!
+    lastName: String!
     email: String!
 }
 
 input CreateUserInput {
-    name: String!
+    firstName: String!
+    lastName: String!
     email: String!
 }
 

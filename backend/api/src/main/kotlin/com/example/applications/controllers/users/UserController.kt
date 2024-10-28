@@ -38,7 +38,8 @@ class UserController(
             .map {
                 FindUserSuccessResponse(
                     id = it.id,
-                    name = it.name,
+                    firstName = it.firstName,
+                    lastName = it.lastName,
                     email = it.email,
                 )
             }
@@ -55,7 +56,8 @@ class UserController(
         requestBody
             .let {
                 UserCreateInput(
-                    name = it.name,
+                    firstName = it.firstName,
+                    lastName = it.lastName,
                     email = it.email,
                 )
             }
@@ -105,7 +107,8 @@ class UserController(
 
 data class FindUserSuccessResponse(
     val id: String,
-    val name: String,
+    val firstName: String,
+    val lastName: String,
     val email: String,
 )
 
@@ -114,6 +117,7 @@ data class CreateUserSuccessResponse(
 )
 
 data class CreateRequestBody(
-    @NonNull val name: String,
+    @NonNull val firstName: String,
+    @NonNull val lastName: String,
     @NonNull val email: String,
 )

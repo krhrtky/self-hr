@@ -4,7 +4,7 @@ import com.example.domains.entities.users.AllUsersCondition
 import com.example.domains.entities.users.UserDTO
 import com.example.domains.entities.users.UserQueryService
 import com.example.domains.entities.users.Users
-import com.example.infrastructure.db.tables.User.Companion.USER
+import com.example.infrastructure.db.tables.references.APP_USER
 import org.jooq.DSLContext
 import org.springframework.stereotype.Service
 
@@ -14,29 +14,31 @@ class MySQLUserQueryService(
 ) : UserQueryService {
     override fun find(id: String): UserDTO? =
         context
-            .selectFrom(USER)
+            .selectFrom(APP_USER)
             .where(
-                USER.ID.eq(id)
+                APP_USER.ID.eq(id)
             )
             .fetchOne {
                 UserDTO(
                     id = it.id,
-                    name = it.name,
+                    firstName = it.firstName,
+                    lastName = it.lastName,
                     email = it.email,
                 )
             }
     override fun allUsers(condition: AllUsersCondition): Users {
-        val total = context.fetchCount(USER)
+        val total = context.fetchCount(APP_USER)
         val users = context
-            .selectFrom(USER)
-            .orderBy(USER.ID.desc())
+            .selectFrom(APP_USER)
+            .orderBy(APP_USER.ID.desc())
             .limit(condition.limit)
             .offset(condition.offset)
-            .fetchInto(USER)
+            .fetchInto(APP_USER)
             .map {
                 UserDTO(
                     id = it.id,
-                    name = it.name,
+                    firstName = it.firstName,
+                    lastName = it.lastName,
                     email = it.email,
                 )
             }

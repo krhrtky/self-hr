@@ -41,6 +41,11 @@ jobs:
         shell: sh
         run: |
           make setup-backend
+        env:
+          DB_HOST: db
+          DB_USER: root
+          DB_PASSWORD: password
+          DB_NAME: app
       - name: Setup and execute Gradle 'test' task
         id: lint
         uses: gradle/actions/setup-gradle@v3

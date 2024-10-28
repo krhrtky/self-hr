@@ -6,7 +6,8 @@ abstract class UserRepository {
     fun save(user: User) {
         UserRaw(
             id = user.id.value,
-            name = user.name,
+            firstName = user.firstName,
+            lastName = user.lastName,
             email = user.email
         )
             .let(::upsert)
@@ -14,17 +15,20 @@ abstract class UserRepository {
 
     protected fun mapToEntity(
         id: String,
-        name: String,
+        firstName: String,
+        lastName: String,
         email: String,
     ): User = User.fromRepository(
         id,
-        name,
+        firstName,
+        lastName,
         email,
     )
 
     protected data class UserRaw(
         val id: String,
-        val name: String,
+        val firstName: String,
+        val lastName: String,
         val email: String,
     )
 }
