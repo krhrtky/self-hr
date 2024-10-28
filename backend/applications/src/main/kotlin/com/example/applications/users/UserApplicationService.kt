@@ -20,7 +20,7 @@ class UserApplicationService(
     fun create(input: UserCreateInput) = {
         input
             .let {
-                User.create(input.firstName, input.firstName, input.email)
+                User.create(input.firstName, input.lastName, input.email)
             }
             .apply(repository::save).id.value
     }
