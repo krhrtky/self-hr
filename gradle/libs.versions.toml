@@ -2,7 +2,7 @@
 kotlin = "1.9.22"
 springBoot = "3.2.3"
 springDependencyManagement = "1.1.4"
-detekt = "1.23.5"
+detekt = "1.23.7"
 archUnit = "1.2.1"
 dgs = "8.6.0"
 kotest = "5.8.1"
