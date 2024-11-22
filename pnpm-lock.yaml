@@ -57,7 +57,7 @@ importers:
         version: 0.358.0(react@18.3.1)
       orval:
         specifier: 6.29.1
-        version: 6.29.1(openapi-types@12.1.3)(typescript@5.4.2)
+        version: 6.29.1(openapi-types@12.1.3)(typescript@5.7.2)
       react:
         specifier: 18.3.1
         version: 18.3.1
@@ -109,10 +109,10 @@ importers:
         version: 8.0.0(@types/react@18.3.12)(react-dom@18.3.1)(react@18.3.1)
       '@storybook/react':
         specifier: ^8.0.0
-        version: 8.0.0(react-dom@18.3.1)(react@18.3.1)(typescript@5.4.2)
+        version: 8.0.0(react-dom@18.3.1)(react@18.3.1)(typescript@5.7.2)
       '@storybook/react-vite':
         specifier: ^8.0.0
-        version: 8.0.0(react-dom@18.3.1)(react@18.3.1)(typescript@5.4.2)(vite@5.1.7)
+        version: 8.0.0(react-dom@18.3.1)(react@18.3.1)(typescript@5.7.2)(vite@5.1.7)
       '@storybook/test':
         specifier: ^8.0.0
         version: 8.0.0(vitest@1.3.1)
@@ -139,7 +139,7 @@ importers:
         version: 13.8.6
       msw:
         specifier: ^2.3.0
-        version: 2.3.0(typescript@5.4.2)
+        version: 2.3.0(typescript@5.7.2)
       postcss:
         specifier: ^8.4.38
         version: 8.4.38
@@ -150,14 +150,14 @@ importers:
         specifier: ^3.4.1
         version: 3.4.1
       typescript:
-        specifier: 5.4.2
-        version: 5.4.2
+        specifier: 5.7.2
+        version: 5.7.2
       vite:
         specifier: 5.1.7
         version: 5.1.7
       vite-plugin-checker:
         specifier: ^0.6.4
-        version: 0.6.4(typescript@5.4.2)(vite@5.1.7)
+        version: 0.6.4(typescript@5.7.2)(vite@5.1.7)
       vitest:
         specifier: 1.3.1
         version: 1.3.1(happy-dom@13.8.6)
@@ -2897,7 +2897,7 @@ packages:
       chalk: 4.1.2
     dev: true
 
-  /@joshwooding/vite-plugin-react-docgen-typescript@0.3.0(typescript@5.4.2)(vite@5.1.7):
+  /@joshwooding/vite-plugin-react-docgen-typescript@0.3.0(typescript@5.7.2)(vite@5.1.7):
     resolution: {integrity: sha512-2D6y7fNvFmsLmRt6UCOFJPvFoPMJGT0Uh1Wg0RaigUp7kdQPs6yYn8Dmx6GZkOH/NW0yMTwRz/p0SRMMRo50vA==}
     peerDependencies:
       typescript: '>= 4.3.x'
@@ -2909,8 +2909,8 @@ packages:
       glob: 7.2.3
       glob-promise: 4.2.2(glob@7.2.3)
       magic-string: 0.27.0
-      react-docgen-typescript: 2.2.2(typescript@5.4.2)
-      typescript: 5.4.2
+      react-docgen-typescript: 2.2.2(typescript@5.7.2)
+      typescript: 5.7.2
       vite: 5.1.7
     dev: true
 
@@ -4921,7 +4921,7 @@ packages:
       - supports-color
     dev: true
 
-  /@storybook/builder-vite@8.0.0(typescript@5.4.2)(vite@5.1.7):
+  /@storybook/builder-vite@8.0.0(typescript@5.7.2)(vite@5.1.7):
     resolution: {integrity: sha512-dJhd8QwQDELwStbM1P6LEXjFHVbhMM4jH5L+UkDDrS42m2YTvizdGhyRvEJajLz1Ar7o4++p2hBBA/dU9NXfJQ==}
     peerDependencies:
       '@preact/preset-vite': '*'
@@ -4953,7 +4953,7 @@ packages:
       fs-extra: 11.2.0
       magic-string: 0.30.5
       ts-dedent: 2.2.0
-      typescript: 5.4.2
+      typescript: 5.7.2
       vite: 5.1.7
     transitivePeerDependencies:
       - encoding
@@ -5316,7 +5316,7 @@ packages:
       react-dom: 18.3.1(react@18.3.1)
     dev: true
 
-  /@storybook/react-vite@8.0.0(react-dom@18.3.1)(react@18.3.1)(typescript@5.4.2)(vite@5.1.7):
+  /@storybook/react-vite@8.0.0(react-dom@18.3.1)(react@18.3.1)(typescript@5.7.2)(vite@5.1.7):
     resolution: {integrity: sha512-ojUjI3n9BZkXichyHNa59hvgjYGSDVNxZjwENHMrkHqN92mHpOHdhHEsubw7Yi3O8e5fPSa3cX9S7ldPheTDmw==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
@@ -5324,11 +5324,11 @@ packages:
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
       vite: ^4.0.0 || ^5.0.0
     dependencies:
-      '@joshwooding/vite-plugin-react-docgen-typescript': 0.3.0(typescript@5.4.2)(vite@5.1.7)
+      '@joshwooding/vite-plugin-react-docgen-typescript': 0.3.0(typescript@5.7.2)(vite@5.1.7)
       '@rollup/pluginutils': 5.1.0
-      '@storybook/builder-vite': 8.0.0(typescript@5.4.2)(vite@5.1.7)
+      '@storybook/builder-vite': 8.0.0(typescript@5.7.2)(vite@5.1.7)
       '@storybook/node-logger': 8.0.0
-      '@storybook/react': 8.0.0(react-dom@18.3.1)(react@18.3.1)(typescript@5.4.2)
+      '@storybook/react': 8.0.0(react-dom@18.3.1)(react@18.3.1)(typescript@5.7.2)
       find-up: 5.0.0
       magic-string: 0.30.5
       react: 18.3.1
@@ -5346,7 +5346,7 @@ packages:
       - vite-plugin-glimmerx
     dev: true
 
-  /@storybook/react@8.0.0(react-dom@18.3.1)(react@18.3.1)(typescript@5.4.2):
+  /@storybook/react@8.0.0(react-dom@18.3.1)(react@18.3.1)(typescript@5.7.2):
     resolution: {integrity: sha512-Nl3jEd8Ezd2aDXfoQAgfGmwna3U6NOLMcCRSYOR63bH4/u16MnnDE8ACy+mH/+yWGEoxNjqcWUJiDk2h4C07LA==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
@@ -5379,7 +5379,7 @@ packages:
       semver: 7.5.4
       ts-dedent: 2.2.0
       type-fest: 2.19.0
-      typescript: 5.4.2
+      typescript: 5.7.2
       util-deprecate: 1.0.2
     transitivePeerDependencies:
       - encoding
@@ -6193,6 +6193,7 @@ packages:
 
   /acorn-import-assertions@1.9.0(acorn@8.11.3):
     resolution: {integrity: sha512-cmMwop9x+8KFhxvKrKfPYmN6/pKTYYHBqLa0DfvVZcKMJWNyWLnaqND7dx/qn66R7ewM1UX5XMaDVP5wlVTaVA==}
+    deprecated: package has been renamed to acorn-import-attributes
     peerDependencies:
       acorn: ^8
     dependencies:
@@ -9127,7 +9128,7 @@ packages:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
     dev: true
 
-  /msw@2.3.0(typescript@5.4.2):
+  /msw@2.3.0(typescript@5.7.2):
     resolution: {integrity: sha512-cDr1q/QTMzaWhY8n9lpGhceY209k29UZtdTgJ3P8Bzne3TSMchX2EM/ldvn4ATLOktpCefCU2gcEgzHc31GTPw==}
     engines: {node: '>=18'}
     hasBin: true
@@ -9154,7 +9155,7 @@ packages:
       path-to-regexp: 6.2.1
       strict-event-emitter: 0.5.1
       type-fest: 4.10.3
-      typescript: 5.4.2
+      typescript: 5.7.2
       yargs: 17.7.2
     dev: true
 
@@ -9437,7 +9438,7 @@ packages:
       wcwidth: 1.0.1
     dev: true
 
-  /orval@6.29.1(openapi-types@12.1.3)(typescript@5.4.2):
+  /orval@6.29.1(openapi-types@12.1.3)(typescript@5.7.2):
     resolution: {integrity: sha512-hYGuPNucbHZeQgSpcoujuR6GzRKbHhl59zFMt6bxZd6XkeEONhGAqOLETAFQ9og/arOlPOMvchy6COCnrEKlRQ==}
     hasBin: true
     dependencies:
@@ -9461,7 +9462,7 @@ packages:
       lodash.uniq: 4.5.0
       openapi3-ts: 4.2.2
       string-argv: 0.3.2
-      tsconfck: 2.1.2(typescript@5.4.2)
+      tsconfck: 2.1.2(typescript@5.7.2)
     transitivePeerDependencies:
       - encoding
       - openapi-types
@@ -9984,12 +9985,12 @@ packages:
       react: 18.3.1
     dev: false
 
-  /react-docgen-typescript@2.2.2(typescript@5.4.2):
+  /react-docgen-typescript@2.2.2(typescript@5.7.2):
     resolution: {integrity: sha512-tvg2ZtOpOi6QDwsb3GZhOjDkkX0h8Z2gipvTg6OVMUyoYoURhEiRNePT8NZItTVCDh39JJHnLdfCOkzoLbFnTg==}
     peerDependencies:
       typescript: '>= 4.3.x'
     dependencies:
-      typescript: 5.4.2
+      typescript: 5.7.2
     dev: true
 
   /react-docgen@7.0.3:
@@ -11143,7 +11144,7 @@ packages:
   /ts-interface-checker@0.1.13:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
 
-  /tsconfck@2.1.2(typescript@5.4.2):
+  /tsconfck@2.1.2(typescript@5.7.2):
     resolution: {integrity: sha512-ghqN1b0puy3MhhviwO2kGF8SeMDNhEbnKxjK7h6+fvY9JAxqvXi8y5NAHSQv687OVboS2uZIByzGd45/YxrRHg==}
     engines: {node: ^14.13.1 || ^16 || >=18}
     hasBin: true
@@ -11153,7 +11154,7 @@ packages:
       typescript:
         optional: true
     dependencies:
-      typescript: 5.4.2
+      typescript: 5.7.2
     dev: false
 
   /tsconfig-paths@4.2.0:
@@ -11252,8 +11253,8 @@ packages:
       is-typed-array: 1.1.12
     dev: false
 
-  /typescript@5.4.2:
-    resolution: {integrity: sha512-+2/g0Fds1ERlP6JsakQQDXjZdZMM+rqpamFZJEKh4kwTIn3iDkgKtby0CeNd5ATNZ4Ry1ax15TMx0W2V+miizQ==}
+  /typescript@5.7.2:
+    resolution: {integrity: sha512-i5t66RHxDvVN40HfDd1PsEThGNnlMCMT3jMUuoh9/0TaqWevNontacunWyN02LA9/fIbEWlcHZcgTKb9QoaLfg==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -11518,7 +11519,7 @@ packages:
       - terser
     dev: true
 
-  /vite-plugin-checker@0.6.4(typescript@5.4.2)(vite@5.1.7):
+  /vite-plugin-checker@0.6.4(typescript@5.7.2)(vite@5.1.7):
     resolution: {integrity: sha512-2zKHH5oxr+ye43nReRbC2fny1nyARwhxdm0uNYp/ERy4YvU9iZpNOsueoi/luXw5gnpqRSvjcEPxXbS153O2wA==}
     engines: {node: '>=14.16'}
     peerDependencies:
@@ -11560,7 +11561,7 @@ packages:
       semver: 7.5.4
       strip-ansi: 6.0.1
       tiny-invariant: 1.3.1
-      typescript: 5.4.2
+      typescript: 5.7.2
       vite: 5.1.7
       vscode-languageclient: 7.0.0
       vscode-languageserver: 7.0.0
