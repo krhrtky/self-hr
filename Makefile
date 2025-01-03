@@ -10,6 +10,11 @@ db-up:
 		done; \
 	fi
 
+ci-environment:
+	@if [ $(CI) ]; then \
+		env > .env; \
+	fi
+
 setup: setup-backend setup-frontend
 
 setup-backend: db-up db-migrate-local db-codegen
@@ -22,7 +27,7 @@ setup-terraform:
 DB_MIGRATE_COMMAND = docker compose run --rm sqldef psqldef
 
 dry-db-migrate-local:
-	${DB_MIGRATE_COMMAND} -h db -U $(DB_USER) -W $(DB_PASSWORD) $(DB_NAME) --file=./volume/schema.sql --dry-run
+	${DB_MIGRATE_COMMAND} -h db -U root -W password app --file=./volume/schema.sql --dry-run
 
 dry-db-migrate-remote:
 	${DB_MIGRATE_COMMAND} -h $(DB_HOST) -U $(DB_USER) -W $(DB_PASSWORD) $(DB_NAME) --file=./volume/schema.sql --dry-run
