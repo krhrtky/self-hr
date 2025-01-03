@@ -15,11 +15,11 @@ ci-environment:
 		env > .env; \
 	fi
 
-setup: ci-environment setup-backend setup-frontend
+setup: setup-backend setup-frontend
 
-setup-backend: db-up db-migrate-local db-codegen
+setup-backend: ci-environment db-up db-migrate-local db-codegen
 
-setup-frontend: install-frontend open-api-client-gen
+setup-frontend: ci-environment install-frontend open-api-client-gen
 
 setup-terraform:
 	cd infrastructure && sh ./bin/setup.sh
