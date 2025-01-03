@@ -40,8 +40,8 @@ export const Route = new RootRoute({
 
 const isSignIn: () => Promise<boolean> = async () => {
   try {
-    const user = await getCurrentUser();
-    return user.signInDetails?.loginId !== undefined;
+    await getCurrentUser();
+    return true;
   } catch (e) {
     return false;
   }
