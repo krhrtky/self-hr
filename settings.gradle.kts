@@ -7,6 +7,6 @@ include(
     "backend:applications",
     "backend:core",
     "backend:testCore",
-    "backend:domains",
+    "backend:deprecateddomains",
     "backend:infrastructure",
 )

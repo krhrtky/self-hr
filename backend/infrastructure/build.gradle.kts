@@ -18,7 +18,7 @@ dependencies {
     implementation(libs.jackson.module.kotlin)
     implementation(libs.kotlin.reflect)
     implementation(libs.kotlin.stdlib)
-    implementation(project(":backend:domains"))
+    implementation(project(":backend:deprecateddomains"))
     implementation(project(":backend:core"))
     testImplementation(project(":backend:testCore"))
 
