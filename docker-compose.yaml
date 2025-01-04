@@ -10,7 +10,8 @@ services:
       - DB_PASSWORD
       - DB_NAME
     depends_on:
-      - db
+      db:
+        condition: service_healthy
   db:
     image: 'postgres:16.4'
     ports:
@@ -18,36 +19,76 @@ services:
     expose:
       - "5432"
     environment:
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER:-root}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-password}
+      - POSTGRES_DB=${DB_NAME:-app}
       - TZ=UTC
     volumes:
       - db-store:/var/lib/postgresql/data
+      - './db/log:/log'
       - './docker/db:/data'
-  aws-local-cli:
-    image: public.ecr.aws/aws-cli/aws-cli:2.15.30
-    environment:
-      ENDPOINT_URL: http://moto-aws-local:4000
-      COGNITO_USER_EMAIL: sample@example.com
-      COGNITO_USER_PASSWORD: P@ssword00
-    entrypoint: []
-    depends_on:
-      - moto-aws-local
-    volumes:
-      - './docker/aws-local-cli/.bin:/aws-local-cli/.bin'
-      - './docker/aws-local-cli/.aws:/root/.aws'
-      - './docker/aws-local-cli/output:/aws-local-cli/output'
-    networks:
-      - default
-  moto-aws-local:
-    image: motoserver/moto:5.0.5
-    environment:
-      MOTO_PORT: 4000
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}"]
+  traefik:
+    image: traefik:v3.2.0
     ports:
-      - '4000:4000'
-    networks:
-      - default
+      - "80:80"
+      - "8080:8080"
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: localhost:24224
+        tag: traefik.logs
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik/traefik.toml:/etc/traefik/traefik.toml
+    depends_on:
+      - fluent-bit
+      - otel-collector
+
+  app:
+    build:
+      context: .
+      dockerfile: "./backend/api/Dockerfile"
+      args:
+        - DB_URL=${DB_USER}
+        - DB_USER=${DB_PASSWORD}
+        - DB_PASSWORD=${DB_NAME}
+    env_file:
+      - .env
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.spring-app.rule=Host(`localhost`)"
+      - "traefik.http.services.spring-app.loadbalancer.server.port=8080"
+    depends_on:
+      - db
+      - traefik
+      - fluent-bit
+      - otel-collector
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: localhost:24224
+        tag: springboot.logs
+  fluent-bit:
+    image: fluent/fluent-bit:latest
+    volumes:
+      - ./fluent-bit/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
+    ports:
+      - "24224:24224"
+    env_file:
+      - .env
+  otel-collector:
+    image: otel/opentelemetry-collector:0.113.0
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    env_file:
+      - .env
+    volumes:
+      - ./otel/otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+      - "13133:13133"
 volumes:
   db-store:
   moto-aws-local:

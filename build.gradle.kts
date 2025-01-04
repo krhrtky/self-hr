@@ -60,6 +60,8 @@ allprojects {
 
 subprojects {
     dependencies {
+        implementation("net.logstash.logback:logstash-logback-encoder:7.4")
+
         testImplementation(rootProject.libs.kotest.runner.junit5)
         testImplementation(rootProject.libs.kotest.assertions.core)
         testImplementation(rootProject.libs.kotest.property)
