@@ -1,0 +1,38 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+  hostmetrics:
+    collection_interval: 30s
+    scrapers:
+      cpu:
+      memory:
+
+processors:
+  batch:
+
+exporters:
+  debug:
+  otlphttp/openobserve:
+    endpoint: ${env:OPEN_OBSERVE_ENDPOOINT}
+    headers:
+      Authorization: ${env:OPEN_OBSERVE_AUTH_HEADER}
+      stream-name: default
+
+extensions:
+  health_check:
+
+service:
+  extensions: [health_check]
+  pipelines:
+    metrics:
+      receivers: [otlp, hostmetrics]
+      processors: [batch]
+      exporters: [debug, otlphttp/openobserve]
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [debug, otlphttp/openobserve]

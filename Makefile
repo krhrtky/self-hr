@@ -1,4 +1,4 @@
-.PHONY: db-up, setup, db-migrate-local, db-migrate-remote,db-codegen, api-image, start-backend, start-frontend, build-backend, build-frontend, setup-frontend, test-frontend, start-aws-mock, setup-terraform
+.PHONY: db-up, setup, db-migrate-local, db-migrate-remote,db-codegen, api-image, start-backend, start-frontend, build-backend, build-frontend, setup-frontend, test-frontend, start-aws-mock, setup-terraform, ci-environment
 
 db-up:
 	@if ! docker compose ps | grep -q db; then \
@@ -10,11 +10,16 @@ db-up:
 		done; \
 	fi
 
+ci-environment:
+	@if [ $(CI) ]; then \
+		env > .env; \
+	fi
+
 setup: setup-backend setup-frontend
 
-setup-backend: db-up db-migrate-local db-codegen
+setup-backend: ci-environment db-up db-migrate-local db-codegen
 
-setup-frontend: install-frontend open-api-client-gen
+setup-frontend: ci-environment install-frontend open-api-client-gen
 
 setup-terraform:
 	cd infrastructure && sh ./bin/setup.sh
@@ -22,7 +27,7 @@ setup-terraform:
 DB_MIGRATE_COMMAND = docker compose run --rm sqldef psqldef
 
 dry-db-migrate-local:
-	${DB_MIGRATE_COMMAND} -h db -U $(DB_USER) -W $(DB_PASSWORD) $(DB_NAME) --file=./volume/schema.sql --dry-run
+	${DB_MIGRATE_COMMAND} -h db -U root -W password app --file=./volume/schema.sql --dry-run
 
 dry-db-migrate-remote:
 	${DB_MIGRATE_COMMAND} -h $(DB_HOST) -U $(DB_USER) -W $(DB_PASSWORD) $(DB_NAME) --file=./volume/schema.sql --dry-run

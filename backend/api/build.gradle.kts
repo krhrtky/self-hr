@@ -5,6 +5,12 @@ plugins {
     id("org.springdoc.openapi-gradle-plugin") version "1.8.0"
 }
 
+dependencyManagement {
+    imports {
+        mavenBom("io.opentelemetry.instrumentation:opentelemetry-instrumentation-bom:2.6.0")
+    }
+}
+
 dependencies {
     implementation(libs.spring.starter.web)
     implementation(libs.spring.starter.actuator)
@@ -20,6 +26,8 @@ dependencies {
     implementation(project(":backend:infrastructure"))
     implementation("software.amazon.awssdk:cognitoidentity:2.25.11")
     implementation("software.amazon.awssdk:cognitoidentityprovider:2.25.11")
+    implementation("io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter")
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
 
     testImplementation(libs.spring.starter.test) {
         exclude("org.junit.vintage:junit-vintage-engine")

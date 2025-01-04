@@ -80,3 +80,4 @@ terraform.rc
 
 node_modules
 /infrastructure/config.tfbackend
+.qodo
