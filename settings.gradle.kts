@@ -8,5 +8,7 @@ include(
     "backend:core",
     "backend:testCore",
     "backend:deprecateddomains",
+    "backend:domains:proprietor",
     "backend:infrastructure",
+    "backend:shared",
 )
