@@ -3,6 +3,15 @@ provider "aws" {
   region = var.region
 }
 
+data "terraform_remote_state" "cognito" {
+  backend = "s3"
+  config = {
+    bucket = var.cognito_state_bucket
+    key    = var.cognito_state_key
+    region = var.region # Assuming Cognito state is in the same region as the API infrastructure
+  }
+}
+
 # VPC and Networking
 resource "aws_vpc" "main" {
   cidr_block = var.vpc_cidr_block
@@ -334,7 +343,7 @@ resource "aws_ecs_service" "api" {
 
   health_check_grace_period_seconds = var.ecs_service_health_check_grace_period_seconds
 
-  depends_on = [aws_lb_listener.http] # Ensure listener is created before service
+  depends_on = [aws_lb_listener.https] # Updated dependency to the new HTTPS listener
 
   tags = {
     Name = "${var.environment}-${var.app_name}-service"
@@ -380,18 +389,51 @@ resource "aws_lb_target_group" "api" {
   }
 }
 
-resource "aws_lb_listener" "http" {
+resource "aws_lb_listener" "https" {
   load_balancer_arn = aws_lb.main.arn
-  port              = 80
-  protocol          = "HTTP"
+  port              = 443
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08" # A common default, consider updating if specific needs arise
+  certificate_arn   = var.alb_certificate_arn
 
   default_action {
+    order = 1
+    type = "authenticate-cognito"
+    authenticate_cognito {
+      user_pool_arn       = data.terraform_remote_state.cognito.outputs.user_pool_arn
+      user_pool_client_id = data.terraform_remote_state.cognito.outputs.user_pool_client_id
+      user_pool_domain    = data.terraform_remote_state.cognito.outputs.user_pool_domain_base_url # This should be the domain prefix
+      # session_cookie_name = "AWSELBAuthSessionCookie-${var.environment}" # Optional: customize cookie name
+      on_unauthenticated_request = "authenticate" # Default is "authenticate"
+    }
+  }
+
+  default_action {
+    order            = 2
     type             = "forward"
     target_group_arn = aws_lb_target_group.api.arn
   }
 
   tags = {
-    Name = "${var.environment}-http-listener"
+    Name = "${var.environment}-https-listener"
+  }
+}
+
+resource "aws_lb_listener" "http_redirect_to_https" {
+  load_balancer_arn = aws_lb.main.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type = "redirect"
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301" # Permanent redirect
+    }
+  }
+  tags = {
+    Name = "${var.environment}-http-redirect-listener"
   }
 }
 

@@ -67,15 +67,15 @@ pnpm dev
 ## AWS Infrastructure & Deployment
 
 ### Overview
-The API is designed to be deployed to Amazon Web Services (AWS). The infrastructure leverages services like Elastic Container Service (ECS) for running the containerized application, Application Load Balancer (ALB) for traffic distribution, Elastic Container Registry (ECR) for Docker image storage, and Virtual Private Cloud (VPC) for network isolation.
+The API is designed to be deployed to Amazon Web Services (AWS). The infrastructure leverages services like Elastic Container Service (ECS) for running the containerized application, Application Load Balancer (ALB) for traffic distribution, Elastic Container Registry (ECR) for Docker image storage, and Virtual Private Cloud (VPC) for network isolation. **The API is protected by Amazon Cognito authentication at the Application Load Balancer level, meaning access to API endpoints requires users to authenticate via the configured Cognito User Pool.** All traffic is enforced to use HTTPS.
 
 ### Infrastructure Provisioning
 The AWS infrastructure is managed using Terraform.
 
-*   **API Infrastructure**: Detailed information on setting up the core API infrastructure (VPC, ECR, ECS, ALB, etc.) can be found in the dedicated README:
+*   **API Infrastructure**: Detailed information on setting up the core API infrastructure (VPC, ECR, ECS, ALB, etc.) can be found in the dedicated README. **This setup includes the integration of the Application Load Balancer with Amazon Cognito for authentication.**
     *   [API Infrastructure Setup Guide](./infrastructure/aws/resources/api/README.md)
-*   **Cognito**: User authentication and management are handled by AWS Cognito. The Terraform configuration for Cognito is managed separately.
-    *   See the Cognito infrastructure directory: [./infrastructure/aws/resources/cognito/](./infrastructure/aws/resources/cognito/)
+*   **Cognito**: User authentication and management are handled by AWS Cognito. The Terraform configuration for Cognito is managed separately and must be deployed *before* the API infrastructure.
+    *   See the Cognito infrastructure directory: [./infrastructure/aws/resorces/cognito/](./infrastructure/aws/resorces/cognito/) (Note: "resorces" is the actual directory name with a typo).
 
 ### Deployment Process
 Deployments to AWS are automated using GitHub Actions. The workflow is defined in `.github/workflows/docker-image-push.yml`.

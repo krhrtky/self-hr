@@ -98,3 +98,18 @@ variable "container_environment_variables" {
   #   { name = "DB_PORT", value = "5432" }
   # ]
 }
+
+variable "cognito_state_bucket" {
+  description = "Name of the S3 bucket where the Cognito module's Terraform state is stored."
+  type        = string
+}
+
+variable "cognito_state_key" {
+  description = "Path to the Cognito module's Terraform state file in the S3 bucket."
+  type        = string
+}
+
+variable "alb_certificate_arn" {
+  description = "ARN of the ACM certificate for the ALB HTTPS listener."
+  type        = string
+}
