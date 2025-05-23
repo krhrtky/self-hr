@@ -26,7 +26,7 @@ class User private constructor(
         if (eventConsumed) {
             throw EventAlreadyConsumedException()
         } else {
-            eventConsumed = false
+        eventConsumed = true
             event
         }
 
@@ -43,7 +43,7 @@ class User private constructor(
         this.event + event,
     )
 
-    private class EventAlreadyConsumedException : Exception("Event has already consumed.")
+    internal class EventAlreadyConsumedException : Exception("Event has already consumed.")
 
     companion object {
         fun create(
