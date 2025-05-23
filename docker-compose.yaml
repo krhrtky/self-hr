@@ -57,10 +57,25 @@ services:
       - "traefik.http.routers.spring-app.rule=Host(`localhost`)"
       - "traefik.http.services.spring-app.loadbalancer.server.port=8080"
     depends_on:
-      - db
-      - traefik
-      - fluent-bit
-      - otel-collector
+      db:
+        condition: service_healthy # Assuming db's healthcheck is reliable
+      traefik:
+        condition: service_started # Traefik doesn't have a healthcheck here
+      fluent-bit:
+        condition: service_started # Fluent-bit doesn't have a healthcheck here
+      otel-collector:
+        condition: service_started # Otel-collector doesn't have a healthcheck here
+      localstack:
+        condition: service_healthy
+    environment:
+      # Environment variables for Spring Boot app if needed, e.g. DB connection already handled by .env
+      # AWS SDK specific environment variables to point to LocalStack
+      AWS_ENDPOINT_URL: http://localstack:4566
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      AWS_REGION: ${AWS_REGION:-us-east-1} # Ensure AWS_REGION is defined in .env or defaults here
+      # Example for specific service endpoint override if needed by the application
+      # COGNITO_IDP_ENDPOINT_OVERRIDE: http://localstack:4566
     logging:
       driver: fluentd
       options:
@@ -74,6 +89,32 @@ services:
       - "24224:24224"
     env_file:
       - .env
+  localstack:
+    container_name: localstack
+    image: localstack/localstack:3.0
+    ports:
+      - "4566:4566"             # Main LocalStack Gateway
+      - "4510-4559:4510-4559"   # External services port range (legacy)
+    environment:
+      SERVICES: ec2,elbv2,ecs,ecr,cognito-idp,s3,iam,sts,cloudformation
+      DEBUG: 1
+      PERSISTENCE: 1
+      DOCKER_HOST: unix:///var/run/docker.sock
+      DEFAULT_REGION: ${AWS_REGION:-us-east-1}
+      SKIP_SSL_CERT_DOWNLOAD: 1
+      LS_LOG: trace # More verbose logging, can be 'debug', 'info', 'warn', 'error'
+    volumes:
+      - ./tmp/localstack:/var/lib/localstack # For persistence
+      - ./docker/localstack/init-aws.sh:/etc/localstack/init/ready.d/init-aws.sh # Initialization script
+      - /var/run/docker.sock:/var/run/docker.sock # To allow LocalStack to manage Docker containers
+    healthcheck:
+      test: ["CMD-SHELL", "awslocal health | jq -e '.services | all(.status == \"available\")' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s # Give LocalStack time to start all services
+    depends_on:
+      - fluent-bit # Optional: if localstack logs should go through fluent-bit (needs config)
   otel-collector:
     image: otel/opentelemetry-collector:0.113.0
     command: ["--config=/etc/otel-collector-config.yaml"]
@@ -87,4 +128,9 @@ services:
       - "13133:13133"
 volumes:
   db-store:
-  moto-aws-local:
+  # moto-aws-local: # This seems like a leftover or for a different setup, not used by LocalStack directly here
+  localstack-data: # More explicit name for LocalStack persistence volume if not using host bind
+    driver: local # This line is not strictly necessary if you use the host bind "./tmp/localstack"
+
+# Note: The volume `./tmp/localstack` needs to exist or Docker will create it as root.
+# Consider adding a .mkdir command or ensuring it's in .gitignore if it's truly temporary.
