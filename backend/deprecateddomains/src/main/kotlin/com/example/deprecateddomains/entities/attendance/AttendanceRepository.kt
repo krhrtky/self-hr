@@ -1,8 +1,8 @@
 package com.example.deprecateddomains.entities.attendance
 
-import com.example.domains.entities.attendance.events.AttendanceEvent
-import com.example.domains.entities.attendance.events.AttendanceEventID
-import com.example.domains.entities.users.UserID
+import com.example.deprecateddomains.entities.attendance.events.AttendanceEvent
+import com.example.deprecateddomains.entities.attendance.events.AttendanceEventID
+import com.example.deprecateddomains.entities.users.UserID
 import java.sql.Timestamp
 import java.time.LocalDate
 import java.time.OffsetDateTime

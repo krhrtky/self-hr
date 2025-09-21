@@ -1,10 +1,10 @@
 .PHONY: db-up, setup, db-migrate-local, db-migrate-remote,db-codegen, api-image, start-backend, start-frontend, build-backend, build-frontend, setup-frontend, test-frontend, start-aws-mock, setup-terraform, ci-environment
 
 db-up:
-	@if ! docker compose ps | grep -q db; then \
-		docker compose up db -d; \
+	@if ! docker-compose ps | grep -q db; then \
+		docker-compose up db -d; \
 		echo "Waiting for db service to be ready..."; \
-		until docker compose exec db pg_isready &> /dev/null; \
+		until docker-compose exec db pg_isready &> /dev/null; \
 		do \
 			sleep 1; \
 		done; \
@@ -24,7 +24,7 @@ setup-frontend: ci-environment install-frontend open-api-client-gen
 setup-terraform:
 	cd infrastructure && sh ./bin/setup.sh
 
-DB_MIGRATE_COMMAND = docker compose run --rm sqldef psqldef
+DB_MIGRATE_COMMAND = docker-compose run --rm sqldef psqldef
 
 dry-db-migrate-local:
 	${DB_MIGRATE_COMMAND} -h db -U root -W password app --file=./volume/schema.sql --dry-run
@@ -39,7 +39,7 @@ db-migrate-remote:
 	${DB_MIGRATE_COMMAND} -h $(DB_HOST) -U $(DB_USER) -W $(DB_PASSWORD) $(DB_NAME) --file=./volume/schema.sql
 
 db-seed:
-	docker compose exec -d db sh /data/bin/seed.sh
+	docker-compose exec -d db sh /data/bin/seed.sh
 
 db-codegen:
 	./gradlew backend:infrastructure:generateJooq
@@ -78,12 +78,12 @@ test-frontend:
 	${FRONT_APP_COMMAND} test
 
 start-aws-mock:
-	@if ! docker compose ps | grep -q moto-aws-local; then \
-		docker compose up moto-aws-local -d; \
+	@if ! docker-compose ps | grep -q moto-aws-local; then \
+		docker-compose up moto-aws-local -d; \
 		echo "Waiting for moto-aws-local service to be ready..."; \
 		until curl --silent http://localhost:4000; \
 		do \
 			sleep 1; \
 		done; \
-		docker compose run aws-local-cli bash /aws-local-cli/.bin/create-user-pool.sh; \
+		docker-compose run aws-local-cli bash /aws-local-cli/.bin/create-user-pool.sh; \
 	fi

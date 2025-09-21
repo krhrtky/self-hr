@@ -1,9 +1,9 @@
 package com.example.deprecateddomains.entities.attendance
 
-import com.example.domains.entities.attendance.AttendanceException.AttendanceNotExistsException
-import com.example.domains.entities.attendance.events.AttendanceEvent
-import com.example.domains.entities.attendance.events.AttendanceEventID
-import com.example.domains.entities.users.UserID
+import com.example.deprecateddomains.entities.attendance.AttendanceException.AttendanceNotExistsException
+import com.example.deprecateddomains.entities.attendance.events.AttendanceEvent
+import com.example.deprecateddomains.entities.attendance.events.AttendanceEventID
+import com.example.deprecateddomains.entities.users.UserID
 import com.github.michaelbull.result.Result
 import com.github.michaelbull.result.map
 import com.github.michaelbull.result.toResultOr

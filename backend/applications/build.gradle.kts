@@ -6,6 +6,8 @@ plugins {
 
 dependencies {
     implementation(project(":backend:deprecateddomains"))
+    implementation(project(":backend:domains:project"))
+    implementation(project(":backend:core"))
     implementation(project(":backend:core"))
     implementation(libs.spring.autoconfigure)
     implementation(libs.jackson.module.kotlin)

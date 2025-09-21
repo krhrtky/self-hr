@@ -11,6 +11,8 @@
     "lint:format": "biome format --write ./src",
     "preview": "vite preview",
     "test": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
@@ -43,6 +45,7 @@
   "devDependencies": {
     "@biomejs/biome": "1.6.2",
     "@faker-js/faker": "^8.4.1",
+    "@playwright/test": "^1.55.0",
     "@storybook/addon-essentials": "^8.0.0",
     "@storybook/addon-interactions": "^8.0.0",
     "@storybook/addon-links": "^8.0.0",
