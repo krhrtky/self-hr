@@ -1,6 +1,6 @@
 package com.example.infrastructure.users
 
-import com.example.domains.entities.users.UserRepository
+import com.example.deprecateddomains.entities.users.UserRepository
 import com.example.infrastructure.db.tables.records.AppUserRecord
 import com.example.infrastructure.db.tables.references.APP_USER
 import org.jooq.DSLContext

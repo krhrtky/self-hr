@@ -1,9 +1,9 @@
 package com.example.applications.controllers.attendance
 
 import com.example.applications.attendance.AttendanceApplicationService
-import com.example.domains.entities.attendance.AttendanceException
-import com.example.domains.entities.attendance.AttendanceQueryService
-import com.example.domains.entities.attendance.AttendanceSearchParameters
+import com.example.deprecateddomains.entities.attendance.AttendanceException
+import com.example.deprecateddomains.entities.attendance.AttendanceQueryService
+import com.example.deprecateddomains.entities.attendance.AttendanceSearchParameters
 import com.github.michaelbull.result.fold
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.format.annotation.DateTimeFormat

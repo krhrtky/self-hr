@@ -5,7 +5,9 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":backend:domains"))
+    implementation(project(":backend:deprecateddomains"))
+    implementation(project(":backend:domains:project"))
+    implementation(project(":backend:core"))
     implementation(project(":backend:core"))
     implementation(libs.spring.autoconfigure)
     implementation(libs.jackson.module.kotlin)
@@ -17,7 +19,7 @@ dependencies {
         exclude(module = "mockito-core")
     }
     testImplementation(kotlin("test"))
-    testImplementation(testFixtures(project(":backend:domains")))
+    testImplementation(testFixtures(project(":backend:deprecateddomains")))
 }
 
 tasks.bootJar {

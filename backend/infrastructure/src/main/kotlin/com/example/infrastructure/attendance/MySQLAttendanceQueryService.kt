@@ -1,10 +1,10 @@
 package com.example.infrastructure.attendance
 
-import com.example.domains.entities.attendance.AttendanceEventDTO
-import com.example.domains.entities.attendance.AttendanceQueryResult
-import com.example.domains.entities.attendance.AttendanceQueryResultItem
-import com.example.domains.entities.attendance.AttendanceQueryService
-import com.example.domains.entities.attendance.AttendanceSearchParameters
+import com.example.deprecateddomains.entities.attendance.AttendanceEventDTO
+import com.example.deprecateddomains.entities.attendance.AttendanceQueryResult
+import com.example.deprecateddomains.entities.attendance.AttendanceQueryResultItem
+import com.example.deprecateddomains.entities.attendance.AttendanceQueryService
+import com.example.deprecateddomains.entities.attendance.AttendanceSearchParameters
 import com.example.infrastructure.db.tables.records.AttendanceCorrectEventRecord
 import com.example.infrastructure.db.tables.records.AttendanceRecordEventRecord
 import com.example.infrastructure.db.tables.references.ATTENDANCE

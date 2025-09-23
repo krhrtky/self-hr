@@ -1,0 +1,25 @@
+package com.example.deprecateddomains.entities.users
+
+import java.util.UUID
+
+@JvmInline
+value class UserID internal constructor(
+    private val id: UUID,
+) {
+    val value
+        get() = id.toString()
+
+    companion object {
+        fun create() = UUID
+            .randomUUID()
+            .let(::UserID)
+
+        internal fun fromRepository(id: String) = id
+            .let(UUID::fromString)
+            .let(::UserID)
+
+        fun fromString(id: String) = id
+            .let(UUID::fromString)
+            .let(::UserID)
+    }
+}

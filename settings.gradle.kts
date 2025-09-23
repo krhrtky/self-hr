@@ -7,6 +7,12 @@ include(
     "backend:applications",
     "backend:core",
     "backend:testCore",
-    "backend:domains",
+    "backend:deprecateddomains",
+    "backend:domains:proprietor",
+    "backend:domains:attendance",
+    "backend:domains:contract",
+    "backend:domains:project",
+    "backend:domains:invoice",
     "backend:infrastructure",
+    "backend:shared",
 )
