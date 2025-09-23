@@ -38,24 +38,31 @@ jobs:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           track_progress: true
           prompt: |
-            Comment in Japanese.
-            Please review this pull request and provide feedback on:
-            - Code quality and best practices
-            - Potential bugs or issues
-            - Performance considerations
-            - Security concerns
-            - Test coverage
+            コメントは日本語で記載してください。
 
-            Use the repository's CLAUDE.md for guidance on style and conventions. Be constructive and helpful in your feedback.
+            **必須手順: 以下の順序で実行してください**
 
-            Use the built-in GitHub MCP tools to provide detailed feedback:
-            - Create inline comments on specific lines using the GitHub inline comment tool
-            - Add general PR comments using GitHub CLI tools
-            - Focus on providing specific, actionable feedback tied to exact code locations
+            1. `mcp__github__create_pending_pull_request_review` でペンディングレビューを開始
+            2. `mcp__github__get_pull_request_diff` でPRの差分を取得
+            3. 各変更行に対して `mcp__github__add_pull_request_review_comment_to_pending_review` でインラインコメントを追加
+            4. `mcp__github__submit_pending_pull_request_review` でレビューを送信
 
-            Available tools include GitHub inline comment creation and GitHub CLI operations.
+            **レビュー基準:**
+            - 保守性の観点
+            - 設計・アーキテクチャの妥当性
+            - コード品質
+            - 潜在的なバグ
+            - セキュリティ上の懸念
+
+            **インラインコメントの形式:**
+            - 結論を最初に簡潔に述べる
+            - その後に理由と具体的な改善提案を記載
+            - 建設的で実用的なフィードバックに集中
+            - 肯定的なコメントはインラインレビューでは避ける
+
+            リポジトリのCLAUDE.mdを参考にしてスタイルや規約に従ってください。
 
           # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
           # or https://docs.claude.com/en/docs/claude-code/sdk#command-line for available options
-          claude_args: '--allowed-tools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*)"'
+          claude_args: '--allowed-tools "mcp__github__create_pending_pull_request_review,mcp__github__get_pull_request_diff,mcp__github__add_pull_request_review_comment_to_pending_review,mcp__github__submit_pending_pull_request_review"'
 
