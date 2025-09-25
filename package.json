@@ -6,9 +6,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "packageManager": "pnpm@8.15.5",
+  "packageManager": "pnpm@8.15.9",
   "engines": {
-    "pnpm": ">=8.15.5",
+    "pnpm": ">=8.15.9",
     "node": "20.11.1"
   }
 }
