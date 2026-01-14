@@ -1,48 +1,164 @@
-name: Docker Image Build & Push
+name: Backend API CI/CD - Build and Deploy to ECS
 
 on:
-  workflow_call:
+  push:
+    branches:
+      - main # Triggers on pushes to the main branch
+  workflow_dispatch: # Allows manual triggering
     inputs:
       tag:
-        description: 'Tag for image'
+        description: 'Manual tag for image (optional, defaults to Git SHA)'
         type: string
-        required: true
-  workflow_dispatch:
-    inputs:
-      tag:
-        description: 'Tag for image'
-        type: string
-        required: true
+        required: false
+
+env:
+  # These should be set as GitHub Secrets in your repository settings
+  # Or, if not sensitive and environment-specific, could be vars
+  AWS_REGION: ${{ secrets.AWS_REGION || 'us-east-1' }}
+  ECR_REPOSITORY_NAME: ${{ secrets.ECR_REPOSITORY_NAME }}
+  ECS_CLUSTER_NAME: ${{ secrets.ECS_CLUSTER_NAME }}
+  ECS_SERVICE_NAME: ${{ secrets.ECS_SERVICE_NAME }}
+  ECS_TASK_DEFINITION_FAMILY: ${{ secrets.ECS_TASK_DEFINITION_FAMILY }} # e.g., my-app-task-def (without revision)
+  ECS_CONTAINER_NAME: ${{ secrets.ECS_CONTAINER_NAME }} # The name of the container in your task definition
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
-
     permissions:
       contents: read
-      packages: write
+      # id-token: write # Required for OIDC if using configure-aws-credentials with role-to-assume
+      packages: write # If you were pushing to ghcr.io, not needed for ECR
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - uses: actions/setup-java@v4
+      - name: Setup Java
+        uses: actions/setup-java@v4
         with:
-          distribution: corretto
-          java-version: 17
+          distribution: 'corretto' # Using Corretto as per Dockerfile
+          java-version: '21' # Match JDK in Dockerfile
 
-      - name: Log in to the Container registry
-        uses: docker/login-action@v3
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./backend/api/Dockerfile
-          push: true
-          no-cache: true
-          tags: ghcr.io/${{ github.actor }}/self-hr-api:${{ inputs.tag }}
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set image tags
+        id: image-tags
+        run: |
+          GIT_SHA=$(git rev-parse --short HEAD)
+          MANUAL_TAG=${{ inputs.tag }}
+          IMAGE_TAG_SHA="${GIT_SHA}"
+          IMAGE_TAG_LATEST="latest"
+          if [ -n "$MANUAL_TAG" ]; then
+            echo "ECR_IMAGE_TAG_MANUAL=${{ env.ECR_REPOSITORY_NAME }}:$MANUAL_TAG" >> $GITHUB_ENV
+          fi
+          echo "ECR_IMAGE_URI_SHA=${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY_NAME }}:$IMAGE_TAG_SHA" >> $GITHUB_ENV
+          echo "ECR_IMAGE_URI_LATEST=${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY_NAME }}:$IMAGE_TAG_LATEST" >> $GITHUB_ENV
+          echo "Image URI with SHA: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY_NAME }}:$IMAGE_TAG_SHA"
+          echo "Image URI with latest: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY_NAME }}:$IMAGE_TAG_LATEST"
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          docker build -t $ECR_IMAGE_URI_SHA -t $ECR_IMAGE_URI_LATEST -f backend/api/Dockerfile .
+          docker push $ECR_IMAGE_URI_SHA
+          docker push $ECR_IMAGE_URI_LATEST
+          if [ -n "${{ env.ECR_IMAGE_TAG_MANUAL }}" ]; then
+            docker tag $ECR_IMAGE_URI_SHA ${{ env.ECR_IMAGE_TAG_MANUAL }}
+            docker push ${{ env.ECR_IMAGE_TAG_MANUAL }}
+            echo "Also pushed manual tag: ${{ env.ECR_IMAGE_TAG_MANUAL }}"
+          fi
+        # Note: Consider using docker/build-push-action@v5 if preferred,
+        # but ensure it can output the image URI with the new SHA tag for the ECS task def update.
+        # For this example, direct docker commands are used for clarity in tagging and pushing.
+
+      - name: Download current ECS task definition
+        id: download-task-def
+        run: |
+          aws ecs describe-task-definition --task-definition ${{ env.ECS_TASK_DEFINITION_FAMILY }} --region ${{ env.AWS_REGION }} --query taskDefinition > task-definition.json
+          echo "TASK_DEFINITION_FILE=task-definition.json" >> $GITHUB_ENV
+          echo "Current task definition downloaded to task-definition.json"
+          # Store current task def ARN to ensure we update the correct one if multiple services use the same family prefix
+          CURRENT_TASK_DEF_ARN=$(jq -r .taskDefinitionArn task-definition.json)
+          echo "CURRENT_TASK_DEF_ARN=$CURRENT_TASK_DEF_ARN" >> $GITHUB_ENV
+
+
+      - name: Update image in task definition
+        id: update-task-def
+        run: |
+          echo "Updating task definition with image: $ECR_IMAGE_URI_SHA"
+          # Create new task def content, preserving other values
+          # Ensure ECS_CONTAINER_NAME matches the name of the container definition in your task
+          jq --arg IMAGE_URI "$ECR_IMAGE_URI_SHA" --arg CONTAINER_NAME "${{ env.ECS_CONTAINER_NAME }}" \
+          '.containerDefinitions[] | select(.name == $CONTAINER_NAME).image = $IMAGE_URI | .family = "${{ env.ECS_TASK_DEFINITION_FAMILY }}"' \
+          task-definition.json > new-task-definition.json
+
+          # Remove fields not allowed for new task definition registration
+          # These are: taskDefinitionArn, revision, status, requiresAttributes (with compatibilities), compatibilities, registeredAt, registeredBy, deregisteredAt
+          # For simplicity, we create a new task definition by only selecting allowed fields for registration
+          # See: https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_RegisterTaskDefinition.html
+          jq '{
+            family: .family,
+            taskRoleArn: .taskRoleArn,
+            executionRoleArn: .executionRoleArn,
+            networkMode: .networkMode,
+            containerDefinitions: .containerDefinitions,
+            volumes: .volumes,
+            placementConstraints: .placementConstraints,
+            requiresCompatibilities: .requiresCompatibilities,
+            cpu: .cpu,
+            memory: .memory,
+            tags: .tags,
+            pidMode: .pidMode,
+            ipcMode: .ipcMode,
+            proxyConfiguration: .proxyConfiguration,
+            inferenceAccelerators: .inferenceAccelerators,
+            ephemeralStorage: .ephemeralStorage,
+            runtimePlatform: .runtimePlatform
+          } | del(..|nulls)' new-task-definition.json > final-task-definition.json
+
+          echo "NEW_TASK_DEFINITION_FILE=final-task-definition.json" >> $GITHUB_ENV
+          echo "Updated task definition content:"
+          cat final-task-definition.json
+
+      - name: Register new ECS task definition
+        id: register-task-def
+        run: |
+          NEW_TASK_DEF_ARN=$(aws ecs register-task-definition --cli-input-json file://${{ env.NEW_TASK_DEFINITION_FILE }} --region ${{ env.AWS_REGION }} --query taskDefinition.taskDefinitionArn --output text)
+          if [ -z "$NEW_TASK_DEF_ARN" ]; then
+            echo "Failed to register new task definition."
+            exit 1
+          fi
+          echo "NEW_TASK_DEF_ARN=$NEW_TASK_DEF_ARN" >> $GITHUB_ENV
+          echo "Registered new task definition: $NEW_TASK_DEF_ARN"
+
+      - name: Update ECS service with new task definition
+        id: update-service
+        run: |
+          echo "Updating ECS service ${{ env.ECS_SERVICE_NAME }} in cluster ${{ env.ECS_CLUSTER_NAME }} to use task definition $NEW_TASK_DEF_ARN"
+          aws ecs update-service --cluster ${{ env.ECS_CLUSTER_NAME }} --service ${{ env.ECS_SERVICE_NAME }} --task-definition ${{ env.NEW_TASK_DEF_ARN }} --region ${{ env.AWS_REGION }} --query service.serviceName --output text
+          echo "ECS service update initiated."
+
+      - name: Wait for ECS service deployment to stabilize (optional)
+        run: |
+          echo "Waiting for service deployment to stabilize..."
+          aws ecs wait services-stable --cluster ${{ env.ECS_CLUSTER_NAME }} --services ${{ env.ECS_SERVICE_NAME }} --region ${{ env.AWS_REGION }}
+          echo "Service deployment stable."
+        # This step is optional but recommended to ensure the deployment completes successfully before the workflow finishes.
+        # It can take several minutes.
+
+      - name: Clean up task definition files
+        if: always() # Always run cleanup
+        run: |
+          rm -f task-definition.json new-task-definition.json final-task-definition.json
+          echo "Cleaned up temporary task definition files."

@@ -17,6 +17,34 @@ terraform {
   }
 }
 
+resource "aws_cognito_user_pool_domain" "e2e_domain" {
+  domain       = "${var.env}-e2e-api-auth" # Using var.env as requested
+  user_pool_id = aws_cognito_user_pool.e2e_user_pool.id
+}
+
+output "user_pool_arn" {
+  description = "ARN of the Cognito User Pool"
+  value       = aws_cognito_user_pool.e2e_user_pool.arn
+}
+
+output "user_pool_client_id" {
+  description = "Client ID of the Cognito User Pool Client"
+  value       = aws_cognito_user_pool_client.e2e_user_pool_client.id
+}
+
+output "user_pool_domain_base_url" {
+  description = "Base URL of the Cognito User Pool Domain (this is the prefix, not the full URL)"
+  # The actual cognito domain will be <domain_prefix>.auth.<region>.amazoncognito.com
+  # The output from aws_cognito_user_pool_domain.domain is just the prefix.
+  # The ALB needs just the prefix.
+  value       = aws_cognito_user_pool_domain.e2e_domain.domain
+}
+
+output "user_pool_id" {
+  description = "ID of the Cognito User Pool"
+  value       = aws_cognito_user_pool.e2e_user_pool.id
+}
+
 provider "aws" {
   region = var.aws_region
 }
