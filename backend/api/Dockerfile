@@ -1,4 +1,4 @@
-FROM amazoncorretto:21.0.3
+FROM amazoncorretto:21.0.12
 
 ARG DB_URL
 ARG DB_USER
@@ -12,7 +12,7 @@ WORKDIR /build
 COPY . .
 RUN ./gradlew backend:api:bootJar
 
-FROM amazoncorretto:21.0.3
+FROM amazoncorretto:21.0.12
 
 ENV OTEL_TRACES_EXPORTER otlp
 ENV OTEL_METRICS_EXPORTER otlp
